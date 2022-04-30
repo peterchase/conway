@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaylib", "conwaylib\conw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwayconsole", "conwayconsole\conwayconsole.csproj", "{E52B642B-078A-4FC8-84FD-3F4AAD903C99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaylibtests", "conwaylibtests\conwaylibtests.csproj", "{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +46,17 @@ Global
 		{E52B642B-078A-4FC8-84FD-3F4AAD903C99}.Release|x64.Build.0 = Release|Any CPU
 		{E52B642B-078A-4FC8-84FD-3F4AAD903C99}.Release|x86.ActiveCfg = Release|Any CPU
 		{E52B642B-078A-4FC8-84FD-3F4AAD903C99}.Release|x86.Build.0 = Release|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Debug|x64.Build.0 = Debug|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Debug|x86.Build.0 = Debug|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Release|x64.ActiveCfg = Release|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Release|x64.Build.0 = Release|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Release|x86.ActiveCfg = Release|Any CPU
+		{2A52ED89-50D8-4B3E-903F-4CEB2ACEA6F0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
