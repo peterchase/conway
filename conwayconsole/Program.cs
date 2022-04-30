@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using ConwayLib;
 
@@ -6,10 +8,23 @@ namespace ConwayConsole
 {
     public static class Program
     {
+        private static readonly Dictionary<int, int> sColours = new Dictionary<int, int>
+        {
+            { 0, 31 },
+            { 1, 32 },
+            { 2, 33 },
+            { 3, 34 },
+            { 4, 35 },
+            { 5, 36 },
+            { 6, 37 },
+            { 7, 91 },
+            { 8, 92 },
+        };
+
         public static void Main(params string[] args)
         {
             var random = new Random();
-            var board = new Board(100, 25);
+            var board = new Board(130, 27);
             for (int x = 0; x < board.Width; ++x)
             {
                 for (int y = 0; y < board.Height; ++y)
@@ -19,52 +34,38 @@ namespace ConwayConsole
             }
 
             var game = new Game(board);
-
+            var builder = new StringBuilder();
+            
             while (true)
             {
                 Console.Clear();
                 for (int y = 0; y < board.Height; ++y)
                 {
+                    builder.Clear();
                     for (int x = 0; x < board.Width; ++x)
                     {
-                        switch (board.Neighbours(x, y))
+                        if (board.Cell(x,y))
                         {
-                            case 0:
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                break;
-                            case 1:
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                break;
-                            case 2:
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                break;
-                            case 3:
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                break;
-                            case 4:
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                break;
-                            case 5:
-                                Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                                break;
-                            case 6:
-                                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                break;
-                            case 7:
-                                Console.ForegroundColor = ConsoleColor.DarkCyan;
-                                break;
-                            default:
-                                Console.ForegroundColor = ConsoleColor.DarkBlue;
-                                break;
-                        }
+                            // Set the colour
+                            builder.Append("\u001b[");
+                            builder.Append(sColours[board.Neighbours(x, y)].ToString());
+                            builder.Append('m');
 
-                        Console.Write(board.Cell(x, y) ? "O" : " ");
+                            // Show the cell
+                            builder.Append('O');
+                        }
+                        else
+                        {
+                            builder.Append(' ');
+                        }
                     }
 
-                    Console.WriteLine();
+                    Console.WriteLine(builder.ToString());
                 }
 
-                Thread.Sleep(600);
+                Console.WriteLine("\u001b[0m");
+
+                Thread.Sleep(250);
                 board = game.Turn();
             }
         }
