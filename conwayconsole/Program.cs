@@ -10,16 +10,22 @@ namespace ConwayConsole
     {
         private static readonly Dictionary<int, int> sColours = new Dictionary<int, int>
         {
-            { 0, 31 },
+            { 0, 34 },
             { 1, 32 },
             { 2, 33 },
-            { 3, 34 },
+            { 3, 31 },
             { 4, 35 },
             { 5, 36 },
             { 6, 37 },
             { 7, 91 },
             { 8, 92 },
         };
+
+        private const string cHome = "\u001b[0;0H";
+        private const string cDefaultColour = "\u001b[0m";
+
+        private static string ColourForNeighbours(int n)
+          => $"\u001b[{sColours[n].ToString()}m";
 
         public static void Main(params string[] args)
         {
@@ -40,22 +46,19 @@ namespace ConwayConsole
             var game = new Game(board);
             var builder = new StringBuilder();
             
+            Console.Clear();
+
             while (true)
             {
-                Console.Clear();
+                builder.Clear().Append(cHome);
+
                 for (int y = 0; y < board.Height; ++y)
                 {
-                    builder.Clear();
                     for (int x = 0; x < board.Width; ++x)
                     {
                         if (board.Cell(x,y))
                         {
-                            // Set the colour
-                            builder.Append("\u001b[");
-                            builder.Append(sColours[board.Neighbours(x, y)].ToString());
-                            builder.Append('m');
-
-                            // Show the cell
+                            builder.Append(ColourForNeighbours(board.Neighbours(x, y)));
                             builder.Append('O');
                         }
                         else
@@ -64,10 +67,12 @@ namespace ConwayConsole
                         }
                     }
 
-                    Console.WriteLine(builder.ToString());
+                    builder.Append(Environment.NewLine);
                 }
 
-                Console.WriteLine("\u001b[0m");
+                builder.Append(cDefaultColour);
+
+                Console.WriteLine(builder.ToString());
 
                 Thread.Sleep(delay);
                 board = game.Turn();
