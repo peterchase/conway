@@ -23,8 +23,12 @@ namespace ConwayConsole
 
         public static void Main(params string[] args)
         {
+            int width = args.Length > 0 ? int.Parse(args[0]) : 40;
+            int height = args.Length > 1 ? int.Parse(args[1]) : 20;
+            int delay = args.Length > 2 ? int.Parse(args[2]) : 500;
+
             var random = new Random();
-            var board = new Board(130, 27);
+            var board = new Board(width, height);
             for (int x = 0; x < board.Width; ++x)
             {
                 for (int y = 0; y < board.Height; ++y)
@@ -65,7 +69,7 @@ namespace ConwayConsole
 
                 Console.WriteLine("\u001b[0m");
 
-                Thread.Sleep(250);
+                Thread.Sleep(delay);
                 board = game.Turn();
             }
         }
