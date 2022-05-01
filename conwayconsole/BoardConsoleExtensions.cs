@@ -26,7 +26,7 @@ namespace ConwayConsole
         private static string ColourForNeighbours(int n)
           => $"\u001b[{sColours[n].ToString()}m";
 
-        public static string ToConsoleString(this IBoard board, StringBuilder builder = null)
+        public static string ToConsoleString(this IReadableBoard board, StringBuilder builder = null)
         {
             if (builder is null)
             {

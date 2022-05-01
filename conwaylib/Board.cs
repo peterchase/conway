@@ -4,15 +4,14 @@ using System.Linq;
 
 namespace ConwayLib
 {
-
-    public sealed class Board : IBoard, IEnumerable<bool>
+    public sealed class Board : IMutableBoard, IEnumerable<bool>
     {
         private readonly bool[][] mCells;
 
         public Board(int width, int height)
         {
             mCells = Enumerable.Range(0, height)
-                .Select(row => new bool[width])
+                .Select(_ => new bool[width])
                 .ToArray();
         }
 
@@ -20,14 +19,17 @@ namespace ConwayLib
 
         public int Height => mCells.Length;
 
+        bool IReadableBoard.Cell(int x, int y) => Cell(x, y);
+
         public ref bool Cell(int x, int y) => ref mCells[y][x];
 
-        // This method is mostly here to allow the collection initialiser syntax
+#region CollectionInitialiser
         public void Add(int x, int y, bool value) => Cell(x, y) = value;
 
-        IEnumerator<bool> IEnumerable<bool>.GetEnumerator() => mCells.SelectMany(row => row).GetEnumerator();
+        public IEnumerator<bool> GetEnumerator() => mCells.SelectMany(row => row).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<bool>)this).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+#endregion
     }
 }
 

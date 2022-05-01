@@ -3,9 +3,9 @@ namespace ConwayLib
     public sealed class Game
     {
         private readonly IEvolution mEvolution;
-        private IBoard curBoard, nextBoard;
+        private IMutableBoard curBoard, nextBoard;
 
-        public Game(IBoard initialBoard, IEvolution evolution)
+        public Game(IMutableBoard initialBoard, IEvolution evolution)
         {
             curBoard = initialBoard;
             nextBoard = new Board(initialBoard.Width, initialBoard.Height);
@@ -13,7 +13,7 @@ namespace ConwayLib
             mEvolution = evolution;
         }
 
-        public IBoard Turn()
+        public IReadableBoard Turn()
         {
             for (int x = 0; x < curBoard.Width; ++x)
             {

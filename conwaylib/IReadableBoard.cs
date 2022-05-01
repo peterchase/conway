@@ -1,12 +1,12 @@
 namespace ConwayLib
 {
-    public interface IBoard
+    public interface IReadableBoard
     {
         int Width { get; }
-        
+
         int Height { get; }
 
-        ref bool Cell(int x, int y);
+        bool Cell(int x, int y);
     }
 }
 

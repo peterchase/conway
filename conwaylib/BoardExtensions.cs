@@ -5,7 +5,7 @@ namespace ConwayLib
 {
     public static class BoardExtensions
     {
-        public static int Neighbours(this IBoard board, int x, int y)
+        public static int Neighbours(this IReadableBoard board, int x, int y)
         {
             int neighbours = 0;
             for (int xx = Max(0, x - 1);
@@ -31,7 +31,7 @@ namespace ConwayLib
             return neighbours;
         }
 
-        public static void Randomise(this IBoard board, Random random, double threshold)
+        public static IMutableBoard Randomise(this IMutableBoard board, Random random, double threshold)
         {
             for (int x = 0; x < board.Width; ++x)
             {
@@ -40,6 +40,8 @@ namespace ConwayLib
                     board.Cell(x, y) = random.NextDouble() > 0.6;
                 }
             }
+
+            return board;
         }
     }
 }
