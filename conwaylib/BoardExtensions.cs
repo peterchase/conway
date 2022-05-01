@@ -5,6 +5,11 @@ namespace ConwayLib
 {
     public static class BoardExtensions
     {
+        /// <summary>
+        /// For the cell of <paramref name="board"/> at position [<paramref name="x"/>, <paramref name="y"/>], this
+        /// returns the number of alive neighbours, not including the cell itself. Cells beyond the edges of
+        /// <paramref name="board"/> are considered always-dead.
+        /// </summary>
         public static int Neighbours(this IReadableBoard board, int x, int y)
         {
             int neighbours = 0;
@@ -31,13 +36,17 @@ namespace ConwayLib
             return neighbours;
         }
 
-        public static IMutableBoard Randomise(this IMutableBoard board, Random random, double threshold)
+        /// <summary>
+        /// Randomises the state of all cells in <paramref name="board"/>. The proportion of cells that
+        /// are dead is given by <paramref name="deadFraction"/>, which must be between 0 and 1.
+        /// </summary>
+        public static IMutableBoard Randomise(this IMutableBoard board, Random random, double deadFraction)
         {
             for (int x = 0; x < board.Width; ++x)
             {
                 for (int y = 0; y < board.Height; ++y)
                 {
-                    board.Cell(x, y) = random.NextDouble() > threshold;
+                    board.Cell(x, y) = random.NextDouble() > deadFraction;
                 }
             }
 

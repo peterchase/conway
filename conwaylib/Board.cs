@@ -4,6 +4,11 @@ using System.Linq;
 
 namespace ConwayLib
 {
+    /// <summary>
+    /// A simple in-memory implementation of <see cref="IMutableBoard"/>. It supports C# collection
+    /// initialiser syntax by virtue of implementing <see cref="IEnumerable{T}"/> and having the
+    /// <see cref="Add"/> method.
+    /// </summary>
     public sealed class Board : IMutableBoard, IEnumerable<bool>
     {
         private readonly bool[][] mCells;

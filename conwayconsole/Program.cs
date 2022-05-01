@@ -5,6 +5,9 @@ using ConwayLib;
 
 namespace ConwayConsole
 {
+    /// <summary>
+    /// Entry point for a run of Conway's Game of Life with console-based display of the board.
+    /// </summary>
     public static class Program
     {
         public static async Task Main(params string[] args)

@@ -1,5 +1,8 @@
 namespace ConwayLib
 {
+    /// <summary>
+    /// Represents the standard evolution rules of Conway's Game of Life.
+    /// </summary>
     public sealed class StandardEvolution : IEvolution
     {
         public static IEvolution Instance { get; } = new StandardEvolution();
