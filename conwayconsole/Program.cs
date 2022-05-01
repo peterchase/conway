@@ -1,12 +1,10 @@
 using System;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using ConwayLib;
 
 namespace ConwayConsole
 {
-
     public static class Program
     {
 
@@ -22,8 +20,7 @@ namespace ConwayConsole
             
             Console.Clear();
 
-            IReadableBoard board = initialBoard;
-            while (true)
+            for (IReadableBoard board = initialBoard; ;)
             {
                 await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
                 await Task.Delay(delay);
