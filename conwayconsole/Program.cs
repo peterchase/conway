@@ -33,15 +33,8 @@ namespace ConwayConsole
             int height = args.Length > 1 ? int.Parse(args[1]) : 20;
             int delay = args.Length > 2 ? int.Parse(args[2]) : 500;
 
-            var random = new Random();
-            var board = new Board(width, height);
-            for (int x = 0; x < board.Width; ++x)
-            {
-                for (int y = 0; y < board.Height; ++y)
-                {
-                    board.Cell(x, y) = random.NextDouble() > 0.6;
-                }
-            }
+            IBoard board = new Board(width, height);
+            board.Randomise(new Random(), 0.6);
 
             var game = new Game(board, StandardEvolution.Instance);
             var builder = new StringBuilder();

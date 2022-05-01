@@ -1,11 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ConwayLib
 {
-    public sealed class Board : IEnumerable<bool>
+
+    public sealed class Board : IBoard, IEnumerable<bool>
     {
         private readonly bool[][] mCells;
 
@@ -25,35 +25,9 @@ namespace ConwayLib
         // This method is mostly here to allow the collection initialiser syntax
         public void Add(int x, int y, bool value) => Cell(x, y) = value;
 
-        public int Neighbours(int x, int y)
-        {
-            int neighbours = 0;
-            for (int xx = Math.Max(0, x - 1);
-                xx <= Math.Min(Width - 1, x + 1);
-                ++xx)
-                {
-                    for (int yy = Math.Max(0, y - 1);
-                        yy <= Math.Min(Height - 1, y + 1);
-                        ++yy)
-                        {
-                            if ((xx == x) && (yy == y))
-                            {
-                                continue;
-                            }
+        IEnumerator<bool> IEnumerable<bool>.GetEnumerator() => mCells.SelectMany(row => row).GetEnumerator();
 
-                            if (mCells[yy][xx])
-                            {
-                                ++neighbours;
-                            }
-                        }
-                }
-
-            return neighbours;
-        }
-
-        public IEnumerator<bool> GetEnumerator() => mCells.SelectMany(row => row).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<bool>)this).GetEnumerator();
     }
 }
 
