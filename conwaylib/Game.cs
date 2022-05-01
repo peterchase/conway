@@ -1,40 +1,37 @@
 namespace ConwayLib
 {
+    /// <summary>
+    /// Represents one run of Conway's Game of Life.
+    /// </summary>
     public sealed class Game
     {
-        private Board curBoard, nextBoard;
+        private readonly IEvolution mEvolution;
+        private IMutableBoard curBoard, nextBoard;
 
-        public Game(Board initialBoard)
+        /// <summary>
+        /// Constructs a game with starting state <paramref name="initialBoard"/> and using evolution
+        /// rules <paramref name="evolution"/>. The board provided in <paramref name="initialBoard"/>
+        /// may be modified as the game proceeds.
+        /// </summary>
+        public Game(IMutableBoard initialBoard, IEvolution evolution)
         {
-            curBoard = new Board(initialBoard.Width, initialBoard.Height);
+            curBoard = initialBoard;
             nextBoard = new Board(initialBoard.Width, initialBoard.Height);
-            for (int x = 0; x < initialBoard.Width; ++x)
-            {
-                for (int y = 0; y < initialBoard.Height; ++y)
-                {
-                    curBoard.Cell(x, y) = initialBoard.Cell(x, y);
-                }
-            }
+
+            mEvolution = evolution;
         }
 
-        public Board Turn()
+        /// <summary>
+        /// Performs one turn of the game, returning the new state of the board. The returned board
+        /// may be modified by subsequent turns.
+        /// </summary>
+        public IReadableBoard Turn()
         {
             for (int x = 0; x < curBoard.Width; ++x)
             {
                 for (int y = 0; y < curBoard.Height; ++y)
                 {
-                    switch (curBoard.Neighbours(x, y))
-                    {
-                        case 2:
-                            nextBoard.Cell(x, y) = curBoard.Cell(x, y);
-                            break;
-                        case 3:
-                            nextBoard.Cell(x, y) = true;
-                            break;
-                        default:
-                            nextBoard.Cell(x, y) = false;
-                            break;
-                    }
+                    nextBoard.Cell(x, y) = mEvolution.GetNextState(curBoard.Cell(x, y), curBoard.Neighbours(x, y));
                 }
             }
 
