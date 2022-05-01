@@ -43,7 +43,7 @@ namespace ConwayConsole
                 }
             }
 
-            var game = new Game(board);
+            var game = new Game(board, StandardEvolution.Instance);
             var builder = new StringBuilder();
             
             Console.Clear();

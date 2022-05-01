@@ -2,9 +2,10 @@ namespace ConwayLib
 {
     public sealed class Game
     {
+        private readonly IEvolution mEvolution;
         private Board curBoard, nextBoard;
 
-        public Game(Board initialBoard)
+        public Game(Board initialBoard, IEvolution evolution)
         {
             curBoard = new Board(initialBoard.Width, initialBoard.Height);
             nextBoard = new Board(initialBoard.Width, initialBoard.Height);
@@ -15,6 +16,8 @@ namespace ConwayLib
                     curBoard.Cell(x, y) = initialBoard.Cell(x, y);
                 }
             }
+
+            mEvolution = evolution;
         }
 
         public Board Turn()
@@ -23,18 +26,7 @@ namespace ConwayLib
             {
                 for (int y = 0; y < curBoard.Height; ++y)
                 {
-                    switch (curBoard.Neighbours(x, y))
-                    {
-                        case 2:
-                            nextBoard.Cell(x, y) = curBoard.Cell(x, y);
-                            break;
-                        case 3:
-                            nextBoard.Cell(x, y) = true;
-                            break;
-                        default:
-                            nextBoard.Cell(x, y) = false;
-                            break;
-                    }
+                    nextBoard.Cell(x, y) = mEvolution.GetNextState(curBoard.Cell(x, y), curBoard.Neighbours(x, y));
                 }
             }
 
