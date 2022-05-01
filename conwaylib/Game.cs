@@ -9,13 +9,6 @@ namespace ConwayLib
         {
             curBoard = initialBoard;
             nextBoard = new Board(initialBoard.Width, initialBoard.Height);
-            for (int x = 0; x < initialBoard.Width; ++x)
-            {
-                for (int y = 0; y < initialBoard.Height; ++y)
-                {
-                    curBoard.Cell(x, y) = initialBoard.Cell(x, y);
-                }
-            }
 
             mEvolution = evolution;
         }
