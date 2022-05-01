@@ -37,7 +37,7 @@ namespace ConwayLib
             {
                 for (int y = 0; y < board.Height; ++y)
                 {
-                    board.Cell(x, y) = random.NextDouble() > 0.6;
+                    board.Cell(x, y) = random.NextDouble() > threshold;
                 }
             }
 
