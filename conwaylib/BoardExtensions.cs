@@ -1,4 +1,5 @@
 using System;
+using static System.Math;
 
 namespace ConwayLib
 {
@@ -7,12 +8,12 @@ namespace ConwayLib
         public static int Neighbours(this IBoard board, int x, int y)
         {
             int neighbours = 0;
-            for (int xx = Math.Max(0, x - 1);
-                xx <= Math.Min(board.Width - 1, x + 1);
+            for (int xx = Max(0, x - 1);
+                xx <= Min(board.Width - 1, x + 1);
                 ++xx)
             {
-                for (int yy = Math.Max(0, y - 1);
-                    yy <= Math.Min(board.Height - 1, y + 1);
+                for (int yy = Max(0, y - 1);
+                    yy <= Min(board.Height - 1, y + 1);
                     ++yy)
                 {
                     if ((xx == x) && (yy == y))
