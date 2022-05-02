@@ -22,11 +22,10 @@ namespace ConwayConsole
             
             Console.Clear();
 
-            for (IReadableBoard board = initialBoard; ;)
+            for (IReadableBoard board = initialBoard; ; board = game.Turn())
             {
                 await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
                 await Task.Delay(delay);
-                board = game.Turn();
             }
         }
     }
