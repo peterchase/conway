@@ -12,7 +12,7 @@ The initial implementation, which will run the simulation and make a very basic 
 
 These are the high-level steps necessary to get Conway's Game of Life building and running on your new computer. These are not detailed step-by-step instructions, so it is expected that you will need assistance with some of the steps. But don't forget - you are a team and should help each other as much as possible.
 
-* Install Microsoft .Net 6 SDK for Windows x64. Be sure you find the SDK, not just the runtime.
+* Install Microsoft .Net 5 SDK for Windows x64. Be sure you find the SDK, not just the runtime.
 * Install Git for Windows. The default options should be OK.
 * Install Microsoft Visual Studio Code for Windows x64.
 * In Visual Studio Code, install the following extensions
