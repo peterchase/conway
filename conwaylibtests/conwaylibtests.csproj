@@ -4,6 +4,8 @@
     <TargetFramework>net6</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>ConwayLib.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

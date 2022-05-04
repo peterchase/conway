@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "conwayconsole": {
+      "commandName": "Project",
+      "commandLineArgs": "120 25 200"
+    }
+  }
+}
