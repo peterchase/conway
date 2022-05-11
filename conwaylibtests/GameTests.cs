@@ -37,9 +37,30 @@ namespace ConwayLib.Tests
                 .Returns(ci => value);
 
             var game = new Game(initial, evolution);
-            IReadableBoard afterTurn = game.Turn();
 
+            IReadableBoard afterTurn = game.Turn();
             Assert.That(afterTurn, Has.All.EqualTo(value));
+        }
+
+        [Test]
+        public void Turn_ShouldBehaveCorrectly_OnSecondCall()
+        {
+            bool value = true;
+            var initial = new Board(10, 10).Randomise(0.5);
+
+            // Set up an evolution that returns what's in value at time of Turn()
+            var evolution = Substitute.For<IEvolution>();
+            evolution.GetNextState(Arg.Any<bool>(), Arg.Any<int>())
+                .Returns(ci => value);
+
+            var game = new Game(initial, evolution);
+
+            IReadableBoard afterTurn1 = game.Turn();
+            Assert.That(afterTurn1, Has.All.EqualTo(value));
+
+            value = false;
+            IReadableBoard afterTurn2 = game.Turn();
+            Assert.That(afterTurn2, Has.All.EqualTo(value));
         }
     }
 }
