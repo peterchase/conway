@@ -9,7 +9,7 @@ namespace ConwayLib.Tests
     [Test]
     public void MutableCopy_ShouldGiveIdenticalBoard([Values(5, 25)] int size)
     {
-      var original = new Board(size, size).Randomise(new Random(), 0.5);
+      var original = new Board(size, size).Randomise(0.5);
       var copy = original.MutableCopy();
       Assert.That(original, Is.EqualTo(copy));
     }
