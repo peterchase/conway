@@ -10,12 +10,11 @@ namespace ConwayLib
 
     /// <summary>
     /// Constructs a game with starting state <paramref name="initialBoard"/> and using evolution
-    /// rules <paramref name="evolution"/>. The board provided in <paramref name="initialBoard"/>
-    /// may be modified as the game proceeds.
+    /// rules <paramref name="evolution"/>.
     /// </summary>
-    public Game(IMutableBoard initialBoard, IEvolution evolution)
+    public Game(IReadableBoard initialBoard, IEvolution evolution)
     {
-      mCurBoard = initialBoard;
+      mCurBoard = initialBoard.MutableCopy();
       mNextBoard = new Board(initialBoard.Width, initialBoard.Height);
 
       mEvolution = evolution;

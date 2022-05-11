@@ -52,5 +52,25 @@ namespace ConwayLib
 
       return board;
     }
+
+    public static IMutableBoard Randomise(this IMutableBoard board, double deadFraction)
+      => board.Randomise(new Random(), deadFraction);
+      
+    /// <summary>
+    /// Returns a new mutable copy of <paramref name="board"/>.
+    /// </summary>
+    public static IMutableBoard MutableCopy(this IReadableBoard board)
+    {
+      var newBoard = new Board(board.Width, board.Height);
+      for (int x = 0; x < board.Width; ++x)
+      {
+        for (int y = 0; y < board.Height; ++y)
+        {
+          newBoard.Cell(x, y) = board.Cell(x, y);
+        }
+      }
+
+      return newBoard;
+    }
   }
 }

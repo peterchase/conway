@@ -3,9 +3,17 @@ using NUnit.Framework;
 
 namespace ConwayLib.Tests
 {
-  [TestFixture]
+    [TestFixture]
   public sealed class BoardExtensionsTests
   {
+    [Test]
+    public void MutableCopy_ShouldGiveIdenticalBoard([Values(5, 25)] int size)
+    {
+      var original = new Board(size, size).Randomise(0.5);
+      var copy = original.MutableCopy();
+      Assert.That(original, Is.EqualTo(copy));
+    }
+
     [TestCase(0, 0, 2)]
     [TestCase(2, 2, 4)]
     [TestCase(3, 3, 3)]
