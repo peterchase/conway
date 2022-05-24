@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/conwayconsole/bin/Debug/net6/conwayconsole.exe",
+            "program": "${workspaceFolder}/conwayconsole/bin/Debug/net5/conwayconsole.exe",
             "args": ["120", "20", "200"],
             "cwd": "${workspaceFolder}/conwayconsole",
             "console": "integratedTerminal",
