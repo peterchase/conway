@@ -14,8 +14,10 @@ namespace ConwayConsole
   {
     public static async Task Main(params string[] args)
     {
-      CommandLineOptions options = null;
-      Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed<CommandLineOptions>(o => {options = o;});
+      CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
+
+      if (options==null)
+        return;
 
       int width = options.Width;
       int height = options.Height;
