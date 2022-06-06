@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ConwayLib;
 
@@ -16,16 +17,32 @@ namespace ConwayConsole
       int height = args.Length > 1 ? int.Parse(args[1]) : 20;
       int delay = args.Length > 2 ? int.Parse(args[2]) : 500;
 
-      var initialBoard = new Board(width, height).Randomise(new Random(), 0.8);
-      var game = new Game(initialBoard, StandardEvolution.Instance);
-      var builder = new StringBuilder();
-
-      Console.Clear();
-
-      for (IReadableBoard board = initialBoard;; board = game.Turn())
+      using (var cts = new CancellationTokenSource())
       {
-        await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
-        await Task.Delay(delay);
+        Console.CancelKeyPress += HandleCancel;
+        try
+        { 
+          var initialBoard = new Board(width, height).Randomise(new Random(), 0.8);
+          var game = new Game(initialBoard, StandardEvolution.Instance);
+          var builder = new StringBuilder();
+
+          Console.Clear();
+
+          Console.CursorVisible = false;
+              
+          for (IReadableBoard board = initialBoard; !cts.IsCancellationRequested; board = game.Turn())
+          {
+            await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
+            await Task.Delay(delay, cts.Token);
+          }
+        }
+        finally
+        {        
+          Console.CursorVisible = true;
+          Console.CancelKeyPress -= HandleCancel;
+        }
+
+        void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
       }
     }
   }
