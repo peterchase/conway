@@ -19,16 +19,12 @@ namespace ConwayConsole
       if (options==null)
         return;
 
-      int width = options.Width;
-      int height = options.Height;
-      int delay = options.Delay;
-
       using (var cts = new CancellationTokenSource())
       {
         Console.CancelKeyPress += HandleCancel;
         try
         { 
-          var initialBoard = new Board(width, height).Randomise(new Random(), 0.8);
+          var initialBoard = new Board(options.Width, options.Height).Randomise(new Random(), 0.8);
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
@@ -39,7 +35,7 @@ namespace ConwayConsole
           for (IReadableBoard board = initialBoard; !cts.IsCancellationRequested; board = game.Turn())
           {
             await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
-            await Task.Delay(delay, cts.Token);
+            await Task.Delay(options.Delay, cts.Token);
           }
         }
         finally
