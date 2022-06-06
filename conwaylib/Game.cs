@@ -9,7 +9,7 @@ namespace ConwayLib
   /// </summary>
   public sealed class Game
   {
-    private readonly List<IReadableBoard> mHistory = new List<IReadableBoard>();
+    private readonly HashSet<IReadableBoard> mHistory = new HashSet<IReadableBoard>();
 
     private readonly IEvolution mEvolution;
     private IMutableBoard mCurBoard, mNextBoard;
@@ -48,7 +48,7 @@ namespace ConwayLib
 
     public bool PreviousBoardExists(IReadableBoard board)
     {
-      return mHistory.Any(x => Equals(x, board));
+      return mHistory.Contains(board);
     }
   }
 }

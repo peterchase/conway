@@ -43,6 +43,11 @@ namespace ConwayLib
       return true;
     }
 
+    public override int GetHashCode()
+    {
+      return mCells.SelectMany(row => row).Count(x => x);
+    }
+
     public int Width => mCells.FirstOrDefault()?.Length ?? 0;
 
     public int Height => mCells.Length;
