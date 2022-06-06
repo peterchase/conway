@@ -16,9 +16,6 @@ namespace ConwayConsole
     {
       CommandLineOptions options = null;
       Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed<CommandLineOptions>(o => {options = o;});
-      //int width = args.Length > 0 ? int.Parse(args[0]) : 40;
-      //int height = args.Length > 1 ? int.Parse(args[1]) : 20;
-      //int delay = args.Length > 2 ? int.Parse(args[2]) : 500;
 
       int width = options.Width;
       int height = options.Height;
