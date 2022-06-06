@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ConwayLib;
+using CommandLine;
 
 namespace ConwayConsole
 {
@@ -13,16 +14,17 @@ namespace ConwayConsole
   {
     public static async Task Main(params string[] args)
     {
-      int width = args.Length > 0 ? int.Parse(args[0]) : 40;
-      int height = args.Length > 1 ? int.Parse(args[1]) : 20;
-      int delay = args.Length > 2 ? int.Parse(args[2]) : 500;
+      CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
+
+      if (options==null)
+        return;
 
       using (var cts = new CancellationTokenSource())
       {
         Console.CancelKeyPress += HandleCancel;
         try
         { 
-          var initialBoard = new Board(width, height).Randomise(new Random(), 0.8);
+          var initialBoard = new Board(options.Width, options.Height).Randomise(new Random(), 0.8);
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
@@ -33,7 +35,7 @@ namespace ConwayConsole
           for (IReadableBoard board = initialBoard; !cts.IsCancellationRequested; board = game.Turn())
           {
             await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
-            await Task.Delay(delay, cts.Token);
+            await Task.Delay(options.Delay, cts.Token);
           }
         }
         finally
