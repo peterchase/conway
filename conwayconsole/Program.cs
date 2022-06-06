@@ -17,30 +17,32 @@ namespace ConwayConsole
       int delay = args.Length > 2 ? int.Parse(args[2]) : 500;
 
       //Handle show cursor on exit
-      Console.CancelKeyPress += new ConsoleCancelEventHandler(HandleCancel);
-      AppDomain.CurrentDomain.ProcessExit += new EventHandler(HandleExit);
+      Console.CancelKeyPress += HandleCancel;
+      
+      try
+      { 
+        var initialBoard = new Board(width, height).Randomise(new Random(), 0.8);
+        var game = new Game(initialBoard, StandardEvolution.Instance);
+        var builder = new StringBuilder();
 
-      var initialBoard = new Board(width, height).Randomise(new Random(), 0.8);
-      var game = new Game(initialBoard, StandardEvolution.Instance);
-      var builder = new StringBuilder();
+        Console.Clear();
 
-      Console.Clear();
-
-      Console.CursorVisible = false;
-
-      for (IReadableBoard board = initialBoard; ; board = game.Turn())
-      {
-        await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
-        await Task.Delay(delay);
+        Console.CursorVisible = false;
+             
+        for (IReadableBoard board = initialBoard; ; board = game.Turn())
+        {
+          await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
+          await Task.Delay(delay);
+        }
+      }
+      finally
+      {        
+        Console.CursorVisible = true;
+        Console.CancelKeyPress -= HandleCancel;
       }
     }
 
     public static void HandleCancel(object sender, ConsoleCancelEventArgs args)
-    {
-      Console.CursorVisible = true;
-    }
-
-    public static void HandleExit(object sender,  EventArgs e)
     {
       Console.CursorVisible = true;
     }
