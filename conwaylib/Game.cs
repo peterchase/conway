@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
+
 namespace ConwayLib
 {
   /// <summary>
@@ -5,6 +9,8 @@ namespace ConwayLib
   /// </summary>
   public sealed class Game
   {
+    private readonly List<IReadableBoard> mHistory = new List<IReadableBoard>();
+
     private readonly IEvolution mEvolution;
     private IMutableBoard mCurBoard, mNextBoard;
 
@@ -24,7 +30,7 @@ namespace ConwayLib
     /// Performs one turn of the game, returning the new state of the board. The returned board
     /// may be modified by subsequent turns.
     /// </summary>
-    public IReadableBoard Turn()
+    public IReadableBoard Turn(out bool previousExists)
     {
       for (int x = 0; x < mCurBoard.Width; ++x)
       {
@@ -35,7 +41,14 @@ namespace ConwayLib
       }
 
       (mNextBoard, mCurBoard) = (mCurBoard, mNextBoard);
+      previousExists = PreviousBoardExists(mCurBoard);
+      mHistory.Add(mCurBoard.MutableCopy());
       return mCurBoard;
+    }
+
+    public bool PreviousBoardExists(IReadableBoard board)
+    {
+      return mHistory.Any(x => Equals(x, board));
     }
   }
 }

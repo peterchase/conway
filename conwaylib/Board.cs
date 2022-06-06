@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace ConwayLib
   /// initialiser syntax by virtue of implementing <see cref="IEnumerable{T}"/> and having the
   /// <see cref="Add"/> method.
   /// </summary>
-  public sealed class Board : IMutableBoard, IEnumerable<bool>
+  public sealed class Board : IMutableBoard, IEnumerable<bool>, IEquatable<IReadableBoard>
   {
     private readonly bool[][] mCells;
 
@@ -18,6 +19,28 @@ namespace ConwayLib
       mCells = Enumerable.Range(0, height)
         .Select(_ => new bool[width])
         .ToArray();
+    }        
+
+    public override bool Equals(object other)
+      => other is IReadableBoard otherBoard && Equals(otherBoard);
+
+    public bool Equals(IReadableBoard other)
+    {
+      if (other == null)
+        return false;
+
+      if (!(Width == other.Width && Height == other.Height))
+        return false;
+
+      for (int y = 0; y < Height; ++y)
+      {
+        for (int x = 0; x < Width; ++x)
+        {
+          if (other.Cell(x,y) != Cell(x,y))
+            return false;
+        }
+      }
+      return true;
     }
 
     public int Width => mCells.FirstOrDefault()?.Length ?? 0;
