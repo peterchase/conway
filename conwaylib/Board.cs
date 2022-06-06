@@ -2,6 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ConwayLib
 {
@@ -10,6 +14,7 @@ namespace ConwayLib
   /// initialiser syntax by virtue of implementing <see cref="IEnumerable{T}"/> and having the
   /// <see cref="Add"/> method.
   /// </summary>
+  [Serializable]
   public sealed class Board : IMutableBoard, IEnumerable<bool>, IEquatable<IReadableBoard>
   {
     private readonly bool[][] mCells;
@@ -41,6 +46,21 @@ namespace ConwayLib
         }
       }
       return true;
+    }
+
+    public byte[] GetUniqueHash()
+    {
+      using(HashAlgorithm sha = SHA256.Create())
+      {
+        using (var stream = new MemoryStream())
+        {
+          IFormatter formatter = new BinaryFormatter(); 
+          formatter.Serialize(stream, mCells);
+          var rawBytes = stream.ToArray();
+          stream.Close();
+          return sha.ComputeHash(rawBytes);
+        }
+      }
     }
 
     public override int GetHashCode()
