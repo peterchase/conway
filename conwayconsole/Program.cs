@@ -16,6 +16,10 @@ namespace ConwayConsole
       int height = args.Length > 1 ? int.Parse(args[1]) : 20;
       int delay = args.Length > 2 ? int.Parse(args[2]) : 500;
 
+      //Handle show cursor on exit
+      Console.CancelKeyPress += new ConsoleCancelEventHandler(HandleCancel);
+      AppDomain.CurrentDomain.ProcessExit += new EventHandler(HandleExit);
+
       var initialBoard = new Board(width, height).Randomise(new Random(), 0.8);
       var game = new Game(initialBoard, StandardEvolution.Instance);
       var builder = new StringBuilder();
@@ -29,6 +33,16 @@ namespace ConwayConsole
         await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
         await Task.Delay(delay);
       }
+    }
+
+    public static void HandleCancel(object sender, ConsoleCancelEventArgs args)
+    {
+      Console.CursorVisible = true;
+    }
+
+    public static void HandleExit(object sender,  EventArgs e)
+    {
+      Console.CursorVisible = true;
     }
   }
 }
