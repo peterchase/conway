@@ -24,7 +24,10 @@ namespace ConwayConsole
         Console.CancelKeyPress += HandleCancel;
         try
         { 
-          var initialBoard = new Board(options.Width, options.Height).Randomise(new Random(), 0.8);
+          int width = options.Width ?? Console.WindowWidth - 1;
+          int height = options.Height ?? Console.WindowHeight - 1;
+          var initialBoard = new Board(width, height).Randomise(new Random( ), 0.8);
+
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
@@ -32,10 +35,20 @@ namespace ConwayConsole
 
           Console.CursorVisible = false;
           bool stop = false;
+              
+          DateTime lastLoopTime = DateTime.UtcNow;
           for (IReadableBoard board = initialBoard; !(stop || cts.IsCancellationRequested); board = game.Turn(out stop))
           {
             await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
-            await Task.Delay(options.Delay, cts.Token);
+            DateTime now = DateTime.UtcNow;
+            TimeSpan elapsed = now.Subtract(lastLoopTime);
+            TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
+            if (delay > TimeSpan.Zero)
+            {
+              await Task.Delay(delay, cts.Token);
+            }
+
+            lastLoopTime = DateTime.UtcNow;
           }
         }
         catch (OperationCanceledException)
