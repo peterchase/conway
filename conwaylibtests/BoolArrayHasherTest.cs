@@ -29,7 +29,7 @@ namespace ConwayLib.Tests
         [TestCase(new bool[] {true, false, true, false, false, false, false, false, true, false}, new byte[] {130, 2})]
         public void ConvertBoolToByteArray_ShouldGiveCorrectValues(bool[] boolData, byte[] byteExpected)
         {
-            using (hasher = new BoolArrayHasher())
+            using (var hasher = new BoolArrayHasher())
             {
                 var byteResult = hasher.ConvertBoolToByteArray(boolData.Reverse().ToArray());
                 for (int j = 0; j < byteResult.Length; j++)

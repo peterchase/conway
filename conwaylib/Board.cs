@@ -23,7 +23,7 @@ namespace ConwayLib
 
     public byte[] GetUniqueHash()
     {
-      using(hasher = new BoolArrayHasher())
+      using(var hasher = new BoolArrayHasher())
       {
         return hasher.GetUniqueHash(mCells.SelectMany(row => row));
       }
