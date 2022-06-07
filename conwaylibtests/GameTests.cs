@@ -17,7 +17,7 @@ namespace ConwayLib.Tests
                 .Returns(ci => ci.Arg<bool>());
 
             var game = new Game(initial, evolution);
-            IReadableBoard afterTurn = game.Turn();
+            IReadableBoard afterTurn = game.Turn(out _);
 
             // The returned board should have the same alive/dead cells as the initial...
             Assert.That(afterTurn, Is.EqualTo(initial));
@@ -38,7 +38,7 @@ namespace ConwayLib.Tests
 
             var game = new Game(initial, evolution);
 
-            IReadableBoard afterTurn = game.Turn();
+            IReadableBoard afterTurn = game.Turn(out _);
             Assert.That(afterTurn, Has.All.EqualTo(value));
         }
 
@@ -55,11 +55,11 @@ namespace ConwayLib.Tests
 
             var game = new Game(initial, evolution);
 
-            IReadableBoard afterTurn1 = game.Turn();
+            IReadableBoard afterTurn1 = game.Turn(out _);
             Assert.That(afterTurn1, Has.All.EqualTo(value));
 
             value = false;
-            IReadableBoard afterTurn2 = game.Turn();
+            IReadableBoard afterTurn2 = game.Turn(out _);
             Assert.That(afterTurn2, Has.All.EqualTo(value));
         }
     }
