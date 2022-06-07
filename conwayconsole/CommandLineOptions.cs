@@ -11,7 +11,7 @@ namespace ConwayConsole
         [Option('h', "height", Required = false, HelpText = "The height of the simulation")]
         public int Height {get; set;} = 20;
         
-        [Option('d', "delay", Required = false, HelpText = "The pause time between each generation")]
-        public int Delay {get; set;} = 500;
+        [Option('d', "delay", Required = false, HelpText = "The pause time between each generation in milliseconds")]
+        public long Delay {get; set;} = 500;
     }
 }

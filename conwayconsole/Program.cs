@@ -32,10 +32,19 @@ namespace ConwayConsole
 
           Console.CursorVisible = false;
               
+          DateTime lastLoopTime = DateTime.UtcNow;
           for (IReadableBoard board = initialBoard; !cts.IsCancellationRequested; board = game.Turn())
           {
             await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
-            await Task.Delay(options.Delay, cts.Token);
+            DateTime now = DateTime.UtcNow;
+            TimeSpan elapsed = now.Subtract(lastLoopTime);
+            TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
+            if (delay > TimeSpan.Zero)
+            {
+              await Task.Delay(delay, cts.Token);
+            }
+
+            lastLoopTime = DateTime.UtcNow;
           }
         }
         finally
