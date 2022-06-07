@@ -30,10 +30,10 @@ namespace ConwayLib
     {
       Parallel.For(0, mCurBoard.Width, (x, state)=>
       {
-        Parallel.For(0, mCurBoard.Height, (y, state2)=>
+        for (int y = 0; y < mCurBoard.Height; ++y)
         {
           mNextBoard.Cell(x, y) = mEvolution.GetNextState(mCurBoard.Cell(x, y), mCurBoard.Neighbours(x, y));
-        });
+        }
       });
 
       (mNextBoard, mCurBoard) = (mCurBoard, mNextBoard);
