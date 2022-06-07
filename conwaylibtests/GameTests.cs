@@ -1,5 +1,6 @@
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
 namespace ConwayLib.Tests
 {
@@ -27,10 +28,11 @@ namespace ConwayLib.Tests
             Assert.That(afterTurn, Is.Not.SameAs(initial));
         }
 
+
         [Test]
-        public void Turn_ShouldSignalStop_WhenPreviousExists()
+        public void Turn_ShouldSignalStop_WhenPreviousExists([Values(0,1,2,3,4,5)] int seed)
         {
-            var initial = new Board(10, 10).Randomise(0.5);
+            var initial = new Board(10, 10).Randomise(new Random(seed), 0.5);
 
             // Set up an evolution that just returns current state
             var evolution = Substitute.For<IEvolution>();
@@ -45,9 +47,9 @@ namespace ConwayLib.Tests
         }
 
         [Test]
-        public void Turn_ShouldNotSignalStop_WhenPreviousDoesntExist()
+        public void Turn_ShouldNotSignalStop_WhenPreviousDoesntExist([Values(0,1,2,3,4,5)] int seed)
         {
-            var initial = new Board(10, 10).Randomise(0.5);
+            var initial = new Board(10, 10).Randomise(new Random(seed), 0.5);
 
             // Set up an evolution that just returns current state
             var evolution = StandardEvolution.Instance;
