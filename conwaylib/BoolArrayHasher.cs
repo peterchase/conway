@@ -11,21 +11,29 @@ namespace ConwayLib
 {
     public class BoolArrayHasher : IDisposable
     {
-        private HashAlgorithm sha;
+        private readonly HashAlgorithm msha;
+
+        public BoolArrayHasher()
+        {
+            msha = SHA256.Create();
+        }
         public byte[] GetUniqueHash(IEnumerable<bool> boolValues)
         {
-            using(sha = SHA256.Create())
-            {
-                var rawBytes = ConvertBoolToByteArray(boolValues.ToArray());
-                return sha.ComputeHash(rawBytes);
-            }
+            var rawBytes = ConvertBoolToByteArray(boolValues.ToArray());
+            return msha.ComputeHash(rawBytes);
         } 
 
         public void Dispose()
         {
-            sha.Dispose();
+            msha.Dispose();
         }
-
+        
+        /// <summary>
+        /// For reference:
+        /// A bool array reads
+        /// [Byte 2 ----->] | [Byte 1 ----->] | [Byte 0 ----->]
+        /// 1 0 0 0 0 0 0 0 | 0 0 1 0 0 0 0 1 | 1 0 0 1 0 0 0 0
+        /// </summary>
         internal byte[] ConvertBoolToByteArray(bool[] boolValues)
         {
             int byteLength = Math.DivRem(boolValues.Length, 8, out int remainder);
