@@ -19,14 +19,44 @@ namespace ConwayLib.Tests
             var game = new Game(initial, evolution);
             IReadableBoard afterTurn = game.Turn(out bool stop);            
 
-            // Next evolution should exist in history
-            Assert.That(stop, Is.True);
 
             // The returned board should have the same alive/dead cells as the initial...
             Assert.That(afterTurn, Is.EqualTo(initial));
 
             // ... but it should not be the same object
             Assert.That(afterTurn, Is.Not.SameAs(initial));
+        }
+
+        [Test]
+        public void Turn_ShouldSignalStop_WhenPreviousExists()
+        {
+            var initial = new Board(10, 10).Randomise(0.5);
+
+            // Set up an evolution that just returns current state
+            var evolution = Substitute.For<IEvolution>();
+            evolution.GetNextState(Arg.Any<bool>(), Arg.Any<int>())
+                .Returns(ci => ci.Arg<bool>());
+
+            var game = new Game(initial, evolution);
+            IReadableBoard afterTurn = game.Turn(out bool stop);        
+
+            // Next evolution should exist in history
+            Assert.That(stop, Is.True);
+        }
+
+        [Test]
+        public void Turn_ShouldNotSignalStop_WhenPreviousDoesntExist()
+        {
+            var initial = new Board(10, 10).Randomise(0.5);
+
+            // Set up an evolution that just returns current state
+            var evolution = StandardEvolution.Instance;
+
+            var game = new Game(initial, evolution);
+            IReadableBoard afterTurn = game.Turn(out bool stop);            
+
+            // Next evolution should not exist in history
+            Assert.That(stop, Is.False);
         }
 
         [Test]
@@ -64,9 +94,6 @@ namespace ConwayLib.Tests
             value = false;
             IReadableBoard afterTurn2 = game.Turn(out bool stop);
             Assert.That(afterTurn2, Has.All.EqualTo(value));
-
-            // Next evolution should not exist in history
-            Assert.That(stop, Is.False);
         }
     }
 }
