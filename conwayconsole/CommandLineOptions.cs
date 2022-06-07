@@ -13,5 +13,8 @@ namespace ConwayConsole
         
         [Option('d', "delay", Required = false, HelpText = "The pause time between each generation in milliseconds")]
         public long Delay {get; set;} = 500;
+
+        [Option('s', "seed", Required = false, HelpText = "enables you to select the pattern within the random generation")]
+        public int? Seed {get; set;} = null;
     }
 }

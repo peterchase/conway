@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ConwayLib
 {
@@ -35,13 +36,13 @@ namespace ConwayLib
     /// </summary>
     public IReadableBoard Turn(out bool previousExists)
     {
-      for (int x = 0; x < mCurBoard.Width; ++x)
+      Parallel.For(0, mCurBoard.Width, x =>
       {
         for (int y = 0; y < mCurBoard.Height; ++y)
         {
           mNextBoard.Cell(x, y) = mEvolution.GetNextState(mCurBoard.Cell(x, y), mCurBoard.Neighbours(x, y));
         }
-      }
+      });
 
       (mNextBoard, mCurBoard) = (mCurBoard, mNextBoard);
       var hash = mCurBoard.GetUniqueHash();
