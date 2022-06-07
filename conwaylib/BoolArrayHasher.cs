@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.IO;
@@ -24,5 +25,14 @@ namespace ConwayLib
                 }
             }
         } 
+
+        public byte[] ConvertBoolToByteArray(IEnumerable<bool> boolValues)
+        {
+            int byteLength = (int)(boolValues.Count()/8+1);
+            var bits = new BitArray(boolValues.ToArray()); 
+            byte[] bytes = new byte[byteLength];
+            bits.CopyTo(bytes, 0);
+            return bytes;
+        }
     }
 }
