@@ -26,7 +26,9 @@ namespace ConwayConsole
         { 
           int width = options.Width ?? Console.WindowWidth - 1;
           int height = options.Height ?? Console.WindowHeight - 2;
-          var initialBoard = new Board(width, height).Randomise(new Random( ), 0.8);
+          var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
+
+          var initialBoard = new Board(width, height).Randomise(random, 0.8);
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
