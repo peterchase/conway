@@ -36,9 +36,10 @@ namespace ConwayConsole
           Console.Clear();
 
           Console.CursorVisible = false;
+          bool stop = false;
               
           DateTime lastLoopTime = DateTime.UtcNow;
-          for (IReadableBoard board = initialBoard; !cts.IsCancellationRequested; board = game.Turn())
+          for (IReadableBoard board = initialBoard; !(stop || cts.IsCancellationRequested); board = game.Turn(out stop))
           {
             await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
             DateTime now = DateTime.UtcNow;
@@ -51,6 +52,9 @@ namespace ConwayConsole
 
             lastLoopTime = DateTime.UtcNow;
           }
+        }
+        catch (OperationCanceledException)
+        {
         }
         finally
         {        

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConwayLib
@@ -7,6 +10,8 @@ namespace ConwayLib
   /// </summary>
   public sealed class Game
   {
+    private readonly HashSet<byte[]> mHistory = new HashSet<byte[]>();
+
     private readonly IEvolution mEvolution;
     private IMutableBoard mCurBoard, mNextBoard;
 
@@ -18,6 +23,9 @@ namespace ConwayLib
     {
       mCurBoard = initialBoard.MutableCopy();
       mNextBoard = new Board(initialBoard.Width, initialBoard.Height);
+      
+      var hash = mCurBoard.GetUniqueHash();
+      mHistory.Add(hash);
 
       mEvolution = evolution;
     }
@@ -26,7 +34,7 @@ namespace ConwayLib
     /// Performs one turn of the game, returning the new state of the board. The returned board
     /// may be modified by subsequent turns.
     /// </summary>
-    public IReadableBoard Turn()
+    public IReadableBoard Turn(out bool previousExists)
     {
       Parallel.For(0, mCurBoard.Width, x =>
       {
@@ -37,6 +45,9 @@ namespace ConwayLib
       });
 
       (mNextBoard, mCurBoard) = (mCurBoard, mNextBoard);
+      var hash = mCurBoard.GetUniqueHash();
+      previousExists = mHistory.Any(h => h.SequenceEqual(hash));
+      mHistory.Add(hash);
       return mCurBoard;
     }
   }

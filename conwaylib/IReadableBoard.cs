@@ -10,5 +10,7 @@ namespace ConwayLib
     int Height { get; }
 
     bool Cell(int x, int y);
+
+    byte[] GetUniqueHash();
   }
 }
