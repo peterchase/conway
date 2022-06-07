@@ -28,7 +28,7 @@ namespace ConwayLib
     /// </summary>
     public IReadableBoard Turn()
     {
-      Parallel.For(0, mCurBoard.Width, (x, state)=>
+      Parallel.For(0, mCurBoard.Width, x =>
       {
         for (int y = 0; y < mCurBoard.Height; ++y)
         {
