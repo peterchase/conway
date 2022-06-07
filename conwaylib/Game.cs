@@ -22,6 +22,9 @@ namespace ConwayLib
     {
       mCurBoard = initialBoard.MutableCopy();
       mNextBoard = new Board(initialBoard.Width, initialBoard.Height);
+      
+      var hash = mCurBoard.GetUniqueHash();
+      mHistory.Add(hash);
 
       mEvolution = evolution;
     }
