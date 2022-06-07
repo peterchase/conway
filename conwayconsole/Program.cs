@@ -24,7 +24,10 @@ namespace ConwayConsole
         Console.CancelKeyPress += HandleCancel;
         try
         { 
-          var initialBoard = new Board(options.Width, options.Height).Randomise(new Random(), 0.8);
+          int width = options.Width ?? Console.WindowWidth - 1;
+          int height = options.Height ?? Console.WindowHeight - 1;
+          var initialBoard = new Board(width, height).Randomise(new Random( ), 0.8);
+
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
