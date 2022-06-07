@@ -9,20 +9,22 @@ using System.Linq;
 
 namespace ConwayLib
 {
-    public class BoolArrayHasher
+    public class BoolArrayHasher : IDisposable
     {
+        private HashAlgorithm sha;
         public byte[] GetUniqueHash(IEnumerable<bool> boolValues)
         {
-            using(HashAlgorithm sha = SHA256.Create())
+            using(sha = SHA256.Create())
             {
-                using (var stream = new MemoryStream())
-                {
-                    var rawBytes = ConvertBoolToByteArray(boolValues.ToArray());
-                    stream.Close();
-                    return sha.ComputeHash(rawBytes);
-                }
+                var rawBytes = ConvertBoolToByteArray(boolValues.ToArray());
+                return sha.ComputeHash(rawBytes);
             }
         } 
+
+        public void Dispose()
+        {
+            sha.Dispose();
+        }
 
         internal byte[] ConvertBoolToByteArray(bool[] boolValues)
         {
