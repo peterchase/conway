@@ -45,14 +45,9 @@ namespace ConwayLib
 
       (mNextBoard, mCurBoard) = (mCurBoard, mNextBoard);
       var hash = mCurBoard.GetUniqueHash();
-      previousExists = PreviousBoardExists(hash);
+      previousExists = mHistory.Any(h => h.SequenceEqual(hash));
       mHistory.Add(hash);
       return mCurBoard;
-    }
-
-    public bool PreviousBoardExists(byte[] hash)
-    {
-      return mHistory.Any(h => h.SequenceEqual(hash));
     }
   }
 }
