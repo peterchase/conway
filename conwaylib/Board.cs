@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,14 @@ namespace ConwayLib
         .Select(_ => new bool[width])
         .ToArray();
     }
+
+    public byte[] GetUniqueHash()
+    {
+      using(var hasher = new BoolArrayHasher())
+      {
+        return hasher.GetUniqueHash(mCells.SelectMany(row => row));
+      }
+    } 
 
     public int Width => mCells.FirstOrDefault()?.Length ?? 0;
 

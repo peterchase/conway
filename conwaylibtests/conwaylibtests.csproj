@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5</TargetFramework>
-
     <IsPackable>false</IsPackable>
 
     <RootNamespace>ConwayLib.Tests</RootNamespace>
+    <AssemblyName>ConwayLib.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
