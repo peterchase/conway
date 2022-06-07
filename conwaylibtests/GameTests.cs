@@ -17,7 +17,10 @@ namespace ConwayLib.Tests
                 .Returns(ci => ci.Arg<bool>());
 
             var game = new Game(initial, evolution);
-            IReadableBoard afterTurn = game.Turn(out _);
+            IReadableBoard afterTurn = game.Turn(out bool stop);            
+
+            // Next evolution should exist in history
+            Assert.That(stop, Is.True);
 
             // The returned board should have the same alive/dead cells as the initial...
             Assert.That(afterTurn, Is.EqualTo(initial));
@@ -59,8 +62,11 @@ namespace ConwayLib.Tests
             Assert.That(afterTurn1, Has.All.EqualTo(value));
 
             value = false;
-            IReadableBoard afterTurn2 = game.Turn(out _);
+            IReadableBoard afterTurn2 = game.Turn(out bool stop);
             Assert.That(afterTurn2, Has.All.EqualTo(value));
+
+            // Next evolution should not exist in history
+            Assert.That(stop, Is.False);
         }
     }
 }
