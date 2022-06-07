@@ -17,9 +17,7 @@ namespace ConwayLib
             {
                 using (var stream = new MemoryStream())
                 {
-                    IFormatter formatter = new BinaryFormatter(); 
-                    formatter.Serialize(stream, boolValues.ToArray());
-                    var rawBytes = stream.ToArray();
+                    var rawBytes = ConvertBoolToByteArray(boolValues.ToArray());
                     stream.Close();
                     return sha.ComputeHash(rawBytes);
                 }
