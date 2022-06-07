@@ -9,21 +9,31 @@ using System.Linq;
 
 namespace ConwayLib
 {
-    public class BoolArrayHasher
+    public class BoolArrayHasher : IDisposable
     {
+        private readonly HashAlgorithm msha;
+
+        public BoolArrayHasher()
+        {
+            msha = SHA256.Create();
+        }
         public byte[] GetUniqueHash(IEnumerable<bool> boolValues)
         {
-            using(HashAlgorithm sha = SHA256.Create())
-            {
-                using (var stream = new MemoryStream())
-                {
-                    var rawBytes = ConvertBoolToByteArray(boolValues.ToArray());
-                    stream.Close();
-                    return sha.ComputeHash(rawBytes);
-                }
-            }
+            var rawBytes = ConvertBoolToByteArray(boolValues.ToArray());
+            return msha.ComputeHash(rawBytes);
         } 
 
+        public void Dispose()
+        {
+            msha.Dispose();
+        }
+        
+        /// <summary>
+        /// For reference:
+        /// A bool array reads
+        /// [Byte 2 ----->] | [Byte 1 ----->] | [Byte 0 ----->]
+        /// 1 0 0 0 0 0 0 0 | 0 0 1 0 0 0 0 1 | 1 0 0 1 0 0 0 0
+        /// </summary>
         internal byte[] ConvertBoolToByteArray(bool[] boolValues)
         {
             int byteLength = Math.DivRem(boolValues.Length, 8, out int remainder);
