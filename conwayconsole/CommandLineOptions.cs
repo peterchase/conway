@@ -12,6 +12,6 @@ namespace ConwayConsole
         public int Height {get; set;} = 10;
 
         [Option('d', "delay", Required = false, HelpText = "The pause time between each generation")]
-        public int Delay {get; set;} = 100;
+        public int Delay {get; set;} = 1000;
     }
 }
