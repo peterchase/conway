@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace ConwayLib
 {
   /// <summary>
@@ -26,13 +28,13 @@ namespace ConwayLib
     /// </summary>
     public IReadableBoard Turn()
     {
-      for (int x = 0; x < mCurBoard.Width; ++x)
+      Parallel.For(0, mCurBoard.Width, (x, state)=>
       {
-        for (int y = 0; y < mCurBoard.Height; ++y)
+        Parallel.For(0, mCurBoard.Height, (y, state2)=>
         {
           mNextBoard.Cell(x, y) = mEvolution.GetNextState(mCurBoard.Cell(x, y), mCurBoard.Neighbours(x, y));
-        }
-      }
+        });
+      });
 
       (mNextBoard, mCurBoard) = (mCurBoard, mNextBoard);
       return mCurBoard;
