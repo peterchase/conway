@@ -22,12 +22,6 @@ namespace ConwayLib.Tests
             Assert.That(results, Is.Unique);
         }
         
-
-        // For reference:
-        // A bool array reads
-        // [Byte 2 ----->] | [Byte 1 ----->] | [Byte 0 ----->]
-        // 1 0 0 0 0 0 0 0 | 0 0 1 0 0 0 0 1 | 1 0 0 1 0 0 0 0
-
         [TestCase(new bool[] {true, false, false, false, false, false, false, false}, new byte[] {128})]
         [TestCase(new bool[] {true, true, true, true, true, true, true, true}, new byte[] {255})]
         [TestCase(new bool[] {true, true, true, true, true, true, true, true, true}, new byte[] {255, 1})]
