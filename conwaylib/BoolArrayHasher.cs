@@ -26,10 +26,11 @@ namespace ConwayLib
             }
         } 
 
-        public byte[] ConvertBoolToByteArray(IEnumerable<bool> boolValues)
+        internal byte[] ConvertBoolToByteArray(bool[] boolValues)
         {
-            int byteLength = (int)(boolValues.Count()/8+1);
-            var bits = new BitArray(boolValues.ToArray()); 
+            int byteLength = Math.DivRem(boolValues.Length, 8, out int remainder);
+            byteLength += remainder == 0 ? 0 : 1;
+            var bits = new BitArray(boolValues); 
             byte[] bytes = new byte[byteLength];
             bits.CopyTo(bytes, 0);
             return bytes;

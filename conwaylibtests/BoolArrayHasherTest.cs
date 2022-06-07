@@ -21,15 +21,22 @@ namespace ConwayLib.Tests
             // All hashes should be unique
             Assert.That(results, Is.Unique);
         }
+        
 
-        [TestCase(new bool[] {true, false, false, false, false, false, false, false}, new byte[] {128, 0})]
-        [TestCase(new bool[] {true, true, true, true, true, true, true, true}, new byte[] {255, 0})]
+        // For reference:
+        // A bool array reads
+        // [Byte 2 ----->] | [Byte 1 ----->] | [Byte 0 ----->]
+        // 1 0 0 0 0 0 0 0 | 0 0 1 0 0 0 0 1 | 1 0 0 1 0 0 0 0
+
+        [TestCase(new bool[] {true, false, false, false, false, false, false, false}, new byte[] {128})]
+        [TestCase(new bool[] {true, true, true, true, true, true, true, true}, new byte[] {255})]
         [TestCase(new bool[] {true, true, true, true, true, true, true, true, true}, new byte[] {255, 1})]
         [TestCase(new bool[] {false, true, true, true, true, true, true, true, true}, new byte[] {255, 0})]
+        [TestCase(new bool[] {true, false, true, false, false, false, false, false, true, false}, new byte[] {130, 2})]
         public void ConvertBoolToByteArray_ShouldGiveCorrectValues(bool[] boolData, byte[] byteExpected)
         {
             var hasher = new BoolArrayHasher();
-            var byteResult = hasher.ConvertBoolToByteArray(boolData.Reverse());
+            var byteResult = hasher.ConvertBoolToByteArray(boolData.Reverse().ToArray());
             for (int j = 0; j < byteResult.Length; j++)
             {
                 var expected = byteExpected[j];
