@@ -33,10 +33,27 @@ namespace ConwayLib
 
     public int Height => mCells.Length;
 
-    bool IReadableBoard.Cell(int x, int y) => mCells[y][x].HasValue;
+    public bool Cell(int x, int y) => mCells[y][x].HasValue;
+    public int? CellAge(int x, int y) => mCells[y][x];
+    public void SetCell(int x, int y, bool value)
+    {
+      if (value)
+      {
+        if (Cell(x, y))
+        {
+          mCells[y][x] += 1;
+        }
+        else
+        {
+          mCells[y][x] = 0;
+        }
+      }
+      else
+      {
+        mCells[y][x] = null;
+      }
+    }
 
-    public void SetCell(int x, int y, bool value) => mCells[y][x] = value ? 0 : null;
-    
     #region CollectionInitialiser
 
     public void Add(int x, int y, bool value) => SetCell(x, y, value);
