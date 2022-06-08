@@ -46,7 +46,7 @@ namespace ConwayLib
       {
         for (int y = 0; y < board.Height; ++y)
         {
-          board.Cell(x, y) = random.NextDouble() > deadFraction;
+          board.SetCell(x, y, random.NextDouble() > deadFraction);
         }
       }
 
@@ -66,7 +66,7 @@ namespace ConwayLib
       {
         for (int y = 0; y < board.Height; ++y)
         {
-          newBoard.Cell(x, y) = board.Cell(x, y);
+          newBoard.SetCell(x, y, board.Cell(x, y));
         }
       }
 

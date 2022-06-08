@@ -12,12 +12,12 @@ namespace ConwayLib
   /// </summary>
   public sealed class Board : IMutableBoard, IEnumerable<bool>
   {
-    private readonly bool[][] mCells;
+    private readonly int?[][] mCells;
 
     public Board(int width, int height)
     {
       mCells = Enumerable.Range(0, height)
-        .Select(_ => new bool[width])
+        .Select(_ => new int?[width])
         .ToArray();
     }
 
@@ -25,7 +25,7 @@ namespace ConwayLib
     {
       using(var hasher = new BoolArrayHasher())
       {
-        return hasher.GetUniqueHash(mCells.SelectMany(row => row));
+        return hasher.GetUniqueHash(mCells.SelectMany(row => row).Select(i => i.HasValue));
       }
     } 
 
@@ -33,15 +33,15 @@ namespace ConwayLib
 
     public int Height => mCells.Length;
 
-    bool IReadableBoard.Cell(int x, int y) => Cell(x, y);
+    bool IReadableBoard.Cell(int x, int y) => mCells[y][x].HasValue;
 
-    public ref bool Cell(int x, int y) => ref mCells[y][x];
-
+    public void SetCell(int x, int y, bool value) => mCells[y][x] = value ? 0 : null;
+    
     #region CollectionInitialiser
 
-    public void Add(int x, int y, bool value) => Cell(x, y) = value;
+    public void Add(int x, int y, bool value) => SetCell(x, y, value);
 
-    public IEnumerator<bool> GetEnumerator() => mCells.SelectMany(row => row).GetEnumerator();
+    public IEnumerator<bool> GetEnumerator() => mCells.SelectMany(row => row).Select(i => i.HasValue).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
