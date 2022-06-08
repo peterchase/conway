@@ -56,7 +56,7 @@ namespace ConwayConsole
         [Option('p', "density", Required = false, HelpText = "How many cells spawn in on initialisation. Ranges from 0 (no cells) to 1 (full cells)")]
         public double Density {get; set;} = 0.8;        
 
-        [Option('h',"hideDisplay", Required = false, HelpText = "Option not to render the simulation")]
+        [Option('i',"hideDisplay", Required = false, HelpText = "Option not to render the simulation")]
         public bool HideDiplay {get; set;} = false;
     }
 }
