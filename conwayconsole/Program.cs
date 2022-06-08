@@ -20,6 +20,18 @@ namespace ConwayConsole
       if (options==null)
         return;
 
+      Func<IReadableBoard, int, int, int> getValueForColour;
+      switch (options.ColourBy)
+      {
+        case ColourByType.Age:
+          getValueForColour = (b, x, y) => b.CellAge(x, y).Value;
+          break;
+        case ColourByType.Neighbours:
+        default:
+          getValueForColour = (b, x, y) => b.Neighbours(x, y);
+          break;
+      }
+
       using (var cts = new CancellationTokenSource())
       {
         Console.CancelKeyPress += HandleCancel;
@@ -47,7 +59,7 @@ namespace ConwayConsole
           DateTime lastLoopTime = DateTime.UtcNow;
           for (IReadableBoard board = initialBoard; !(stop || cts.IsCancellationRequested); board = game.Turn(out stop))
           {
-            await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder));
+            await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder, getValueForColour));
             DateTime now = DateTime.UtcNow;
             TimeSpan elapsed = now.Subtract(lastLoopTime);
             TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);

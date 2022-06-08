@@ -5,6 +5,6 @@ namespace ConwayLib
   /// </summary>
   public interface IMutableBoard : IReadableBoard
   {
-    new ref bool Cell(int x, int y);
+    void SetCell(int x, int y, bool value);
   }
 }

@@ -42,7 +42,7 @@ namespace ConwayLib
       {
         for (int y = 0; y < mCurBoard.Height; ++y)
         {
-          mNextBoard.Cell(x, y) = mEvolution.GetNextState(mCurBoard.Cell(x, y), mCurBoard.Neighbours(x, y));
+          mNextBoard.SetCell(x, y, mEvolution.GetNextState(mCurBoard.Cell(x, y), mCurBoard.Neighbours(x, y)));
         }
       });
 

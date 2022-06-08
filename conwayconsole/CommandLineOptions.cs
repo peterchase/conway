@@ -55,5 +55,10 @@ namespace ConwayConsole
 
         [Option('p', "density", Required = false, HelpText = "How many cells spawn in on initialisation. Ranges from 0 (no cells) to 1 (full cells)")]
         public double Density {get; set;} = 0.2;
+
+        [Option("colourBy", Required = false, HelpText = "how to colour the cells")]
+        public ColourByType ColourBy {get; set;} = ColourByType.Age;
     }
+
+    public enum ColourByType { Age, Neighbours }
 }
