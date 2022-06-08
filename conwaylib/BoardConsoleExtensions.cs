@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ConwayLib;
-
-namespace ConwayConsole
+using System.Drawing;
+namespace ConwayLib
 {
   /// <summary>
   /// Assists with displaying a board of Conway's Game of Life on a Windows Console that supports
   /// escape-codes to move the cursor and change the text colour.
   /// </summary>
-  internal static class BoardConsoleExtensions
+  public static class BoardConsoleExtensions
   {
     private static readonly Dictionary<int, int> sColours = new()
     {
@@ -29,7 +29,7 @@ namespace ConwayConsole
 
     private static string ColourForNeighbours(int n) => $"\u001b[{sColours[n]}m";
 
-    public static string ToConsoleString(this IReadableBoard board, StringBuilder builder = null)
+    public static string ToConsoleString(this IReadableBoard board, Rectangle? window = null, StringBuilder builder = null)
     {
       if (builder is null)
       {
@@ -42,13 +42,16 @@ namespace ConwayConsole
 
       builder.Append(cHome);
 
-      for (int y = 0; y < board.Height; ++y)
+      int xOffset = window?.X ?? 0;
+      int yOffset = window?.Y ?? 0;
+
+      for (int y = 0; y < (window?.Height ?? board.Height); ++y)
       {
-        for (int x = 0; x < board.Width; ++x)
+        for (int x = 0; x < (window?.Width ?? board.Width); ++x)
         {
-          if (board.Cell(x, y))
+          if (board.Cell(x + xOffset, y + yOffset))
           {
-            builder.Append(ColourForNeighbours(board.Neighbours(x, y)));
+            builder.Append(ColourForNeighbours(board.Neighbours(x + xOffset, y + yOffset)));
             builder.Append('O');
           }
           else

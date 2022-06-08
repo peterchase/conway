@@ -1,5 +1,6 @@
 using System;
 using CommandLine;
+using System.Drawing;
 
 namespace ConwayConsole
 {
@@ -16,6 +17,41 @@ namespace ConwayConsole
 
         [Option('s', "seed", Required = false, HelpText = "Enables you to select the pattern within the random generation")]
         public int? Seed {get; set;} = null;
+
+        [Option("windowWidth", Required = false, HelpText = "The width of the display")]
+        public int? WindowWidth {get; set;} = null;
+
+        [Option("windowHeight", Required = false, HelpText = "The height of the display")]
+        public int? WindowHeight {get; set;} = null;
+
+        [Option("windowX", Required = false, HelpText = "starting x position of the display")]
+        public int? WindowX {get; set;} = null;
+
+        [Option("windowY", Required = false, HelpText = "starting y position of the display")]
+        public int? WindowY {get; set;} = null;
+
+        public int BoardWidth => Width ?? Console.WindowWidth - 1;
+
+        public int BoardHeight => Height ?? Console.WindowHeight - 2;
+
+        public bool TryGetWindow(out Rectangle window)
+        {
+            int x = WindowX ?? 0;
+            int y = WindowY ?? 0;
+            int width = WindowWidth ?? Width ?? Console.WindowWidth - 1;
+            int height = WindowHeight ?? Height ?? Console.WindowHeight - 2;
+
+            window = new Rectangle(x, y, width, height);
+            var board  = new Rectangle(0 , 0, BoardWidth, BoardHeight);
+            
+            if (!board.Contains(window))
+            {
+                window = default;
+                return false;
+            }
+
+            return true;
+        }
 
         [Option('p', "density", Required = false, HelpText = "How many cells spawn in on initialisation. Ranges from 0 (no cells) to 1 (full cells)")]
         public double Density {get; set;} = 0.8;
