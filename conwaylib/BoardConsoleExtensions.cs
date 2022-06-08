@@ -22,12 +22,18 @@ namespace ConwayLib
       { 6, 37 },
       { 7, 91 },
       { 8, 92 },
+      { 9, 93 },
+      { 10, 94 },
+      { 11, 95 },
+      { 12, 96 },
+      { 13, 97 },
+
     };
 
     private const string cHome = "\u001b[0;0H";
     private const string cDefaultColour = "\u001b[0m";
 
-    private static string ColourCode(int n) => $"\u001b[{sColours[n % sColours.Count]}m";
+    internal static string ColourCode(int n) => $"\u001b[{sColours[n % sColours.Count]}m";
 
     public static string ToConsoleString(this IReadableBoard board, Rectangle? window = null, StringBuilder builder = null, Func<IReadableBoard, int, int, int> getValueForColour = null)
     {
