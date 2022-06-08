@@ -41,7 +41,7 @@ namespace ConwayConsole
           DateTime lastLoopTime = DateTime.UtcNow;
           for (IReadableBoard board = initialBoard; !(stop || cts.IsCancellationRequested); board = game.Turn(out stop))
           {
-            await Console.Out.WriteLineAsync(board.ToConsoleString(builder));
+            await Console.Out.WriteLineAsync(board.ToConsoleString(options.Window, builder));
             DateTime now = DateTime.UtcNow;
             TimeSpan elapsed = now.Subtract(lastLoopTime);
             TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);

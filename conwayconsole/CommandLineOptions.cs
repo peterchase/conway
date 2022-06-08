@@ -1,5 +1,6 @@
 using System;
 using CommandLine;
+using System.Drawing;
 
 namespace ConwayConsole
 {
@@ -18,15 +19,21 @@ namespace ConwayConsole
         public int? Seed {get; set;} = null;
 
         [Option("windowWidth", Required = false, HelpText = "The width of the display")]
-        public int? windowWidth {get; set;} = null;
+        public int? WindowWidth {get; set;} = null;
 
         [Option("windowHeight", Required = false, HelpText = "The height of the display")]
-        public int? windowHeight {get; set;} = null;
+        public int? WindowHeight {get; set;} = null;
 
         [Option("windowX", Required = false, HelpText = "starting x position of the display")]
-        public int? windowX {get; set;} = null;
+        public int? WindowX {get; set;} = null;
 
         [Option("windowY", Required = false, HelpText = "starting y position of the display")]
-        public int? windowY {get; set;} = null;
+        public int? WindowY {get; set;} = null;
+
+        public Rectangle Window => new Rectangle(
+            WindowX ?? 0,
+            WindowY ?? 0,
+            WindowWidth ?? Width ?? Console.WindowWidth - 1,
+            WindowHeight ?? Height ?? Console.WindowHeight - 2);
     }
 }
