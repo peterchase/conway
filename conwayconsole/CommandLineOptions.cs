@@ -24,10 +24,10 @@ namespace ConwayConsole
         [Option("windowHeight", Required = false, HelpText = "The height of the display")]
         public int? WindowHeight {get; set;} = null;
 
-        [Option("windowX", Required = false, HelpText = "starting x position of the display")]
+        [Option("windowX", Required = false, HelpText = "Starting x position of the display")]
         public int? WindowX {get; set;} = null;
 
-        [Option("windowY", Required = false, HelpText = "starting y position of the display")]
+        [Option("windowY", Required = false, HelpText = "Starting y position of the display")]
         public int? WindowY {get; set;} = null;
 
         public int BoardWidth => Width ?? Console.WindowWidth - 1;
@@ -54,6 +54,9 @@ namespace ConwayConsole
         }
 
         [Option('p', "density", Required = false, HelpText = "How many cells spawn in on initialisation. Ranges from 0 (no cells) to 1 (full cells)")]
-        public double Density {get; set;} = 0.8;
+        public double Density {get; set;} = 0.8;        
+
+        [Option('h',"hideDisplay", Required = false, HelpText = "Option not to render the simulation")]
+        public bool HideDiplay {get; set;} = false;
     }
 }
