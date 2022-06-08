@@ -57,6 +57,6 @@ namespace ConwayConsole
         public double Density {get; set;} = 0.2;        
 
         [Option('i',"hideDisplay", Required = false, HelpText = "Option not to render the simulation. Does not delay between frames either.")]
-        public bool HideDiplay {get; set;} = false;
+        public bool HideDisplay {get; set;} = false;
     }
 }

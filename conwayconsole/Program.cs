@@ -22,7 +22,11 @@ namespace ConwayConsole
 
       using (var cts = new CancellationTokenSource())
       {
-        Console.CancelKeyPress += HandleCancel;
+        
+        if (!options.HideDisplay)
+        {
+          Console.CancelKeyPress += HandleCancel;
+        }
         try
         { 
           var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
@@ -39,15 +43,18 @@ namespace ConwayConsole
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
-          Console.Clear();
+          if (!options.HideDisplay)
+          {
+            Console.Clear();
+            Console.CursorVisible = false;
+          }
 
-          Console.CursorVisible = false;
           bool stop = false;
               
           DateTime lastLoopTime = DateTime.UtcNow;
           for (IReadableBoard board = initialBoard; !(stop || cts.IsCancellationRequested); board = game.Turn(out stop))
           {
-            if (!options.HideDiplay)
+            if (!options.HideDisplay)
             {
               await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder));
               DateTime now = DateTime.UtcNow;
@@ -67,9 +74,12 @@ namespace ConwayConsole
         {
         }
         finally
-        {        
-          Console.CursorVisible = true;
-          Console.CancelKeyPress -= HandleCancel;
+        {       
+          if (!options.HideDisplay)
+          { 
+            Console.CursorVisible = true;
+            Console.CancelKeyPress -= HandleCancel;
+          }
         }
 
         void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
