@@ -30,10 +30,27 @@ namespace ConwayConsole
         [Option("windowY", Required = false, HelpText = "starting y position of the display")]
         public int? WindowY {get; set;} = null;
 
-        public Rectangle Window => new Rectangle(
-            WindowX ?? 0,
-            WindowY ?? 0,
-            WindowWidth ?? Width ?? Console.WindowWidth - 1,
-            WindowHeight ?? Height ?? Console.WindowHeight - 2);
+        public int BoardWidth => Width ?? Console.WindowWidth - 1;
+
+        public int BoardHeight => Height ?? Console.WindowHeight - 2;
+
+        public bool TryGetWindow(out Rectangle window)
+        {
+            int x = WindowX ?? 0;
+            int y = WindowY ?? 0;
+            int width = WindowWidth ?? Width ?? Console.WindowWidth - 1;
+            int height = WindowHeight ?? Height ?? Console.WindowHeight - 2;
+
+            window = new Rectangle(x, y, width, height);
+            var board  = new Rectangle(0 , 0, BoardWidth, BoardHeight);
+            
+            if (!board.Contains(window))
+            {
+                window = default;
+                return false;
+            }
+
+            return true;
+        }
     }
 }

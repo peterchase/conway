@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,11 +25,15 @@ namespace ConwayConsole
         Console.CancelKeyPress += HandleCancel;
         try
         { 
-          int width = options.Width ?? Console.WindowWidth - 1;
-          int height = options.Height ?? Console.WindowHeight - 2;
           var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
 
-          var initialBoard = new Board(width, height).Randomise(random, 0.8);
+          if (!options.TryGetWindow(out Rectangle window))
+          {
+            await Console.Error.WriteLineAsync("Bad window specification");
+            return;
+          }
+
+          var initialBoard = new Board(options.BoardWidth, options.BoardHeight).Randomise(random, 0.8);
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
@@ -41,7 +46,7 @@ namespace ConwayConsole
           DateTime lastLoopTime = DateTime.UtcNow;
           for (IReadableBoard board = initialBoard; !(stop || cts.IsCancellationRequested); board = game.Turn(out stop))
           {
-            await Console.Out.WriteLineAsync(board.ToConsoleString(options.Window, builder));
+            await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder));
             DateTime now = DateTime.UtcNow;
             TimeSpan elapsed = now.Subtract(lastLoopTime);
             TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);

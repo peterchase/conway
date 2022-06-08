@@ -17,7 +17,7 @@ namespace ConwayLib.Tests
     public void ToConsoleString_ShouldReturnAString_WhenWindowSpecified()
     {
       var original = new Board(20, 20).Randomise(0.5);
-      var rectangle = new Rectangle(10, 10,10, 5);
+      var rectangle = new Rectangle(10, 10, 10, 5);
 
       Assert.That(original.ToConsoleString(rectangle), Is.Not.Null);
     }
