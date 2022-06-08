@@ -54,6 +54,6 @@ namespace ConwayConsole
         }
 
         [Option('p', "density", Required = false, HelpText = "How many cells spawn in on initialisation. Ranges from 0 (no cells) to 1 (full cells)")]
-        public double Density {get; set;} = 0.8;
+        public double Density {get; set;} = 0.2;
     }
 }
