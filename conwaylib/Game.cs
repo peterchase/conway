@@ -10,7 +10,6 @@ namespace ConwayLib
   /// </summary>
   public sealed class Game
   {
-    private HashComparer mHashComparer;
     private HashSet<byte[]> mHistory;
 
     private readonly IEvolution mEvolution;
@@ -21,9 +20,8 @@ namespace ConwayLib
     /// rules <paramref name="evolution"/>.
     /// </summary>
     public Game(IReadableBoard initialBoard, IEvolution evolution)
-    {           
-      mHashComparer = new HashComparer();
-      mHistory = new HashSet<byte[]>(mHashComparer);
+    {
+      mHistory = new HashSet<byte[]>(new HashComparer());
 
       mCurBoard = initialBoard.MutableCopy();
       mNextBoard = new Board(initialBoard.Width, initialBoard.Height);
