@@ -20,13 +20,7 @@ namespace ConwayLib
         {
             unchecked
             {
-                // byte arrays do not support .Sum(), which is why I think I have to use a loop;
-                int sum = 0;
-                foreach (var b in bytes)
-                {
-                    sum+=b;
-                }
-                return sum;                
+                return bytes.Sum(b => (int)b);                
             }
         }
     }
