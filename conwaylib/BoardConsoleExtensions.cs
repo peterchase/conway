@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using ConwayLib;
 
-namespace ConwayConsole
+namespace ConwayLib
 {
   /// <summary>
   /// Assists with displaying a board of Conway's Game of Life on a Windows Console that supports
   /// escape-codes to move the cursor and change the text colour.
   /// </summary>
-  internal static class BoardConsoleExtensions
+  public static class BoardConsoleExtensions
   {
     private static readonly Dictionary<int, int> sColours = new()
     {
