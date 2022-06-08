@@ -34,7 +34,9 @@ namespace ConwayLib
     public int Height => mCells.Length;
 
     public bool Cell(int x, int y) => mCells[y][x].HasValue;
+
     public int? CellAge(int x, int y) => mCells[y][x];
+    
     public void SetCell(int x, int y, bool value)
     {
       if (value)

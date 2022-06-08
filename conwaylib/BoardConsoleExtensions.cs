@@ -27,7 +27,7 @@ namespace ConwayLib
     private const string cHome = "\u001b[0;0H";
     private const string cDefaultColour = "\u001b[0m";
 
-    private static string ColourForNeighbours(int n) => $"\u001b[{sColours[n]}m";
+    private static string ColourCode(int n) => $"\u001b[{sColours[n % sColours.Count]}m";
 
     public static string ToConsoleString(this IReadableBoard board, Rectangle? window = null, StringBuilder builder = null)
     {
@@ -51,7 +51,7 @@ namespace ConwayLib
         {
           if (board.Cell(x + xOffset, y + yOffset))
           {
-            builder.Append(ColourForNeighbours(board.Neighbours(x + xOffset, y + yOffset)));
+            builder.Append(ColourCode(board.CellAge(x + xOffset, y + yOffset).Value));
             builder.Append('O');
           }
           else
