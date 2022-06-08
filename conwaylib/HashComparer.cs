@@ -16,11 +16,18 @@ namespace ConwayLib
                 return hash1.SequenceEqual(hash2);
         }
 
-        public int GetHashCode(byte[] bx)
+        public int GetHashCode(byte[] bytes)
         {
-            int sum = 0;
-            bx.Select(x => sum+=x);
-            return sum;
+            unchecked
+            {
+                // byte arrays do not support .Sum(), which is why I think I have to use a loop;
+                int sum = 0;
+                foreach (var b in bytes)
+                {
+                    sum+=b;
+                }
+                return sum;                
+            }
         }
     }
 }
