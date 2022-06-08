@@ -14,7 +14,10 @@ namespace ConwayConsole
         [Option('d', "delay", Required = false, HelpText = "The pause time between each generation in milliseconds")]
         public long Delay {get; set;} = 500;
 
-        [Option('s', "seed", Required = false, HelpText = "enables you to select the pattern within the random generation")]
+        [Option('s', "seed", Required = false, HelpText = "Enables you to select the pattern within the random generation")]
         public int? Seed {get; set;} = null;
+
+        [Option('p', "density", Required = false, HelpText = "How many cells spawn in on initialisation. Ranges from 0 (no cells) to 1 (full cells)")]
+        public double Density {get; set;} = 0.8;
     }
 }
