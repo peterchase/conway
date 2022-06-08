@@ -29,7 +29,7 @@ namespace ConwayConsole
           var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
           double density = 1- Math.Clamp(options.Density,0,1);
 
-          var initialBoard = new Board(width, height).Randomise(density);
+          var initialBoard = new Board(width, height).Randomise(random, density);
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
