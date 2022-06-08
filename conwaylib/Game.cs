@@ -21,8 +21,7 @@ namespace ConwayLib
     /// rules <paramref name="evolution"/>.
     /// </summary>
     public Game(IReadableBoard initialBoard, IEvolution evolution)
-    {
-      
+    {           
       mHashComparer = new HashComparer();
       mHistory = new HashSet<byte[]>(mHashComparer);
 
@@ -51,7 +50,7 @@ namespace ConwayLib
 
       (mNextBoard, mCurBoard) = (mCurBoard, mNextBoard);
       var hash = mCurBoard.GetUniqueHash();
-      previousExists = mHistory.Any(h => h.SequenceEqual(hash));
+      previousExists = mHistory.Contains(hash);
       mHistory.Add(hash);
       return mCurBoard;
     }
