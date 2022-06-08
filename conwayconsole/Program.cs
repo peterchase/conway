@@ -26,6 +26,7 @@ namespace ConwayConsole
         try
         { 
           var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
+          double density = 1- Math.Clamp(options.Density,0,1);
 
           if (!options.TryGetWindow(out Rectangle window))
           {
@@ -33,7 +34,7 @@ namespace ConwayConsole
             return;
           }
 
-          var initialBoard = new Board(options.BoardWidth, options.BoardHeight).Randomise(random, 0.8);
+          var initialBoard = new Board(options.BoardWidth, options.BoardHeight).Randomise(random, density);
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
