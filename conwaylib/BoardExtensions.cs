@@ -58,7 +58,7 @@ namespace ConwayLib
       Array.ForEach(toApply.SparseData, (p)=>
       {
         board.SetCell(p.X, p.Y, true);
-      }):
+      });
     }
 
     public static IMutableBoard Randomise(this IMutableBoard board, double deadFraction)
