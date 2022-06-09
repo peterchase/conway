@@ -10,7 +10,7 @@ namespace ConwayLib.Tests
     public class GameStateSerializerTests
     {
         [Test]
-        public async Task GameStateSerializer_ShouldDeserializeCorrectly()
+        public async Task GameStateSerializer_ShouldDeserializeSparseCorrectly()
         {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestGameState.json"))
             {
@@ -19,8 +19,8 @@ namespace ConwayLib.Tests
 
                 Assert.That(result.Format, Is.EqualTo(DensityOption.Sparse));
                 Assert.That(pointData, Is.Not.Null);                
-                Assert.That(result.Width, Is.EqualTo(10));
-                Assert.That(pointData[0], Is.EqualTo(new Point(0, 5)));
+                Assert.That(result.Width, Is.EqualTo(5));
+                Assert.That(pointData[0], Is.EqualTo(new Point(0, 4)));
             }
         }
 
