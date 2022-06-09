@@ -1,0 +1,12 @@
+{
+    "Format":"Dense",
+    "DenseData":[
+        [false,false,false,false,false],
+        [false,false,false,false,false],
+        [false,false,false,false,false],
+        [false,false,false,false,false],
+        [true,true,false,false,false]
+    ],
+    "Width":5,
+    "Height":5
+}

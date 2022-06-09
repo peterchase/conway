@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ConwayLib;
 using CommandLine;
+using System.IO;
 
 namespace ConwayConsole
 {
@@ -19,7 +20,7 @@ namespace ConwayConsole
 
       if (options==null)
         return;
-
+      MoveKeyMonitor.Start();
       Func<IReadableBoard, int, int, int> getValueForColour;
       switch (options.ColourBy)
       {
@@ -41,16 +42,45 @@ namespace ConwayConsole
         }
         try
         { 
-          var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
-          double density = 1- Math.Clamp(options.Density,0,1);
-
           if (!options.TryGetWindow(out Rectangle window))
           {
             await Console.Error.WriteLineAsync("Bad window specification");
             return;
           }
 
-          var initialBoard = new Board(options.BoardWidth, options.BoardHeight).Randomise(random, density);
+          Board initialBoard;
+          if (options.FilePath != null)
+          {
+            //Create board from a file
+            try
+            {
+              var gameState = await GameStateSerializer.DeserializeJson(options.FilePath);
+              initialBoard = new Board(gameState);
+              var fileWindow = new Rectangle(0,0,gameState.Width, gameState.Height);
+              window.Intersect(fileWindow);
+            }
+            catch (IOException)
+            {
+              Console.WriteLine("Could not read from file");
+              return;
+            }            
+          }
+          else
+          {
+            // create board based on settings
+            var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
+            double density = 1- Math.Clamp(options.Density,0,1);
+            initialBoard=new Board(options.BoardWidth, options.BoardHeight);
+            initialBoard.Randomise(random, density);
+          }
+
+          MoveKeyMonitor.Movement += (_, args) => 
+          {
+             
+              window.X = Math.Min(Math.Max(0, args.Horizontal + window.X), initialBoard.Width - window.Width);
+              window.Y = Math.Min(Math.Max(0, args.Vertical + window.Y), initialBoard.Height - window.Height );
+
+          };
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
