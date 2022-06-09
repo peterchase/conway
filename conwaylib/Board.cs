@@ -13,12 +13,34 @@ namespace ConwayLib
   public sealed class Board : IMutableBoard, IEnumerable<bool>
   {
     private readonly int?[][] mCells;
-
-    public Board(int width, int height)
+    private static int?[][] NewArray(int width, int height)
     {
-      mCells = Enumerable.Range(0, height)
+      return Enumerable.Range(0, height)
         .Select(_ => new int?[width])
         .ToArray();
+    }
+    public Board(int width, int height)
+    {
+      mCells = NewArray(width, height);
+    }
+    public Board(GameState state)
+    {
+      mCells = NewArray(state.Width, state.Height);
+        switch (state.Format)
+        {
+          case (DensityOption.Sparse):
+            Array.ForEach(state.SparseData, (p)=> SetCell(p.X, p.Y, true));
+            break;
+          case (DensityOption.Dense):
+            for (int x = 0; x < Width; x++)
+            {
+              for (int y = 0; y < Height; y++)
+              {
+                SetCell(x, y, state.DenseData[y][x]);
+              }
+            }
+            break;
+      }
     }
 
     public byte[] GetUniqueHash()
@@ -27,7 +49,7 @@ namespace ConwayLib
       {
         return hasher.GetUniqueHash(mCells.SelectMany(row => row).Select(i => i.HasValue));
       }
-    } 
+    }
 
     public int Width => mCells.FirstOrDefault()?.Length ?? 0;
 
