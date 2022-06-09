@@ -6,13 +6,11 @@ namespace ConwayConsole
 
     internal static class MoveKeyMonitor
     {
-        private static Thread sThread;
-
         public static event EventHandler<MovementEventArgs> Movement;
 
         public static void Start()
         {
-            sThread = new Thread(Monitor) { IsBackground = true };
+            new Thread(Monitor) { IsBackground = true }.Start();
         }
 
         private static void Monitor()
