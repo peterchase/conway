@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/conwayconsole/bin/Debug/net5/conwayconsole.exe",
-            "args": ["120", "20", "200"],
+            "args": [],
             "cwd": "${workspaceFolder}/conwayconsole",
             "console": "integratedTerminal",
             "stopAtEntry": false
