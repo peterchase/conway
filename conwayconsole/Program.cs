@@ -19,7 +19,7 @@ namespace ConwayConsole
 
       if (options==null)
         return;
-
+      MoveKeyMonitor.Start();
       Func<IReadableBoard, int, int, int> getValueForColour;
       switch (options.ColourBy)
       {
@@ -47,6 +47,14 @@ namespace ConwayConsole
           }
 
           var initialBoard = new Board(options.BoardWidth, options.BoardHeight).Randomise(random, density);
+
+          MoveKeyMonitor.Movement += (_, args) => 
+          {
+             
+              window.X = Math.Min(Math.Max(0, args.Horizontal + window.X), initialBoard.Width - window.Width);
+              window.Y = Math.Min(Math.Max(0, args.Vertical + window.Y), initialBoard.Height - window.Height );
+
+          };
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
