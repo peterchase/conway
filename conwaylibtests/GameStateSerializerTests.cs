@@ -18,8 +18,8 @@ namespace ConwayLib.Tests
                 Point[] pointData = result.SparseData;
 
                 Assert.That(result.Format, Is.EqualTo(DensityOption.Sparse));
-                Assert.That(pointData, Is.Not.Null);
-
+                Assert.That(pointData, Is.Not.Null);                
+                Assert.That(result.Width, Is.EqualTo(10));
                 Assert.That(pointData[0], Is.EqualTo(new Point(0, 5)));
             }
         }

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ConwayLib;
 using CommandLine;
+using System.IO;
 
 namespace ConwayConsole
 {
@@ -46,7 +47,28 @@ namespace ConwayConsole
             return;
           }
 
-          var initialBoard = new Board(options.BoardWidth, options.BoardHeight).Randomise(random, density);
+          Board initialBoard;
+          if (options.FilePath != null)
+          {
+            try
+            {
+              var gameState = await GameStateSerializer.DeserializeJson(options.FilePath);
+              initialBoard = new Board(gameState);
+              var fileWindow = new Rectangle(0,0,gameState.Width, gameState.Height);
+              window.Intersect(fileWindow);
+            }
+            catch (IOException)
+            {
+              Console.WriteLine("Could not read from file");
+              return;
+            }            
+          }
+          else
+          {
+            initialBoard=new Board(options.BoardWidth, options.BoardHeight);
+          }
+
+          initialBoard.Randomise(random, density);
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
