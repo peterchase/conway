@@ -1,5 +1,7 @@
 {
-    "Format":"sparse",
+    "Format":"Sparse",
     "SparseData":[{"X":0, "Y":5},
-                {"X":1, "Y":5}]
+                {"X":1, "Y":5}],
+    "Width":10,
+    "Height":10
 }

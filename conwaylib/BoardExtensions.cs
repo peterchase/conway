@@ -53,14 +53,6 @@ namespace ConwayLib
       return board;
     }
 
-    public static void Apply(this Board board, GameState toApply)
-    {
-      Array.ForEach(toApply.SparseData, (p)=>
-      {
-        board.SetCell(p.X, p.Y, true);
-      });
-    }
-
     public static IMutableBoard Randomise(this IMutableBoard board, double deadFraction)
       => board.Randomise(new Random(), deadFraction);
       
