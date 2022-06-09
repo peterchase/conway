@@ -22,5 +22,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="TestSparseGameState.json" />
+    <EmbeddedResource Include="TestDenseGameState.json" />
   </ItemGroup>
 </Project>

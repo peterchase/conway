@@ -9,10 +9,11 @@ namespace ConwayLib.Tests
     [TestFixture]
     public sealed class BoardTests
     {
-        [Test]
-        public async Task BoardConstructor_ShouldSetupFromFileCorrectly()
+        [TestCase("ConwayLib.Tests.TestSparseGameState.json")]
+        [TestCase("ConwayLib.Tests.TestDenseGameState.json")]
+        public async Task BoardConstructor_ShouldSetupFromSparseFileCorrectly(string resourcePath)
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestSparseGameState.json"))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath))
             {
                 GameState result = await GameStateSerializer.DeserializeJson(stream);
                 Board myBoard = new Board(result);
@@ -31,13 +32,9 @@ namespace ConwayLib.Tests
                 {
                     for (int y = 0; y < result.Height; y++)
                     {
-                        if (expected[y][x] != myBoard.Cell(x,y))
-                        {
-                            Assert.Fail("Deserialized board is not as expected");
-                        }
+                        Assert.That(myBoard.Cell(x,y), Is.EqualTo(expected[y][x]));
                     }
                 }
-                Assert.Pass();
             }
         }
     }
