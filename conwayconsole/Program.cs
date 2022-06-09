@@ -38,9 +38,6 @@ namespace ConwayConsole
         Console.CancelKeyPress += HandleCancel;
         try
         { 
-          var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
-          double density = 1- Math.Clamp(options.Density,0,1);
-
           if (!options.TryGetWindow(out Rectangle window))
           {
             await Console.Error.WriteLineAsync("Bad window specification");
@@ -50,6 +47,7 @@ namespace ConwayConsole
           Board initialBoard;
           if (options.FilePath != null)
           {
+            //Create board from a file
             try
             {
               var gameState = await GameStateSerializer.DeserializeJson(options.FilePath);
@@ -65,10 +63,12 @@ namespace ConwayConsole
           }
           else
           {
+            // create board based on settings
+            var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
+            double density = 1- Math.Clamp(options.Density,0,1);
             initialBoard=new Board(options.BoardWidth, options.BoardHeight);
+            initialBoard.Randomise(random, density);
           }
-
-          initialBoard.Randomise(random, density);
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
