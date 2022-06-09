@@ -12,7 +12,7 @@ namespace ConwayLib.Tests
         [Test]
         public async Task GameStateSerializer_ShouldDeserializeSparseCorrectly()
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestGameState.json"))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestSparseGameState.json"))
             {
                 GameState result = await GameStateSerializer.DeserializeJson(stream);
                 Point[] pointData = result.SparseData;

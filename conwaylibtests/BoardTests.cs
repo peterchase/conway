@@ -12,7 +12,7 @@ namespace ConwayLib.Tests
         [Test]
         public async Task BoardConstructor_ShouldSetupFromFileCorrectly()
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestGameState.json"))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestSparseGameState.json"))
             {
                 GameState result = await GameStateSerializer.DeserializeJson(stream);
                 Board myBoard = new Board(result);
