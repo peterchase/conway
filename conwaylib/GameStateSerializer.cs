@@ -8,12 +8,15 @@ namespace ConwayLib
 {
     public static class GameStateSerializer
     {
+        public static async Task<GameState> DeserializeJson(Stream stream)
+        {
+            return  await JsonSerializer.DeserializeAsync<GameState>(stream);
+        }
+
         public static async Task<GameState> DeserializeJson(string filePath)
         {
-            using(FileStream br = File.OpenRead(filePath))
-            {
-                return  await JsonSerializer.DeserializeAsync<GameState>(br);
-            }
+            using FileStream stream = File.OpenRead(filePath);
+            return await DeserializeJson(stream);
         }
     }
 }
