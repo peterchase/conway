@@ -17,8 +17,10 @@ namespace ConwayLib
             int minY = Max(0, y - 1);
             int maxX = Min(board.Width - 1, x + 1);
             int maxY = Min(board.Height - 1, y + 1);
-            if (board is Board concreteBoard)
+
+            if (board is IAgeArrayBoard ageArrayBoard)
             {
+                int?[][] ageArray = ageArrayBoard.GetAgeBoard();
                 for (int xx = minX; xx <= maxX; ++xx)
                 {
                     for (int yy = minY; yy <= maxY; ++yy)
@@ -28,15 +30,16 @@ namespace ConwayLib
                             continue;
                         }
 
-                        if (concreteBoard.Cell(xx, yy))
+                        if (ageArray[yy][xx].HasValue)
                         {
                             ++neighbours;
                         }
                     }
                 }
+
                 return neighbours;
             }
-            
+
             for (int xx = minX; xx <= maxX; ++xx)
             {
                 for (int yy = minY; yy <= maxY; ++yy)
@@ -52,6 +55,7 @@ namespace ConwayLib
                     }
                 }
             }
+
             return neighbours;
         }
 

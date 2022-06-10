@@ -5,12 +5,17 @@ using System.Linq;
 
 namespace ConwayLib
 {
+  public interface IAgeArrayBoard
+  {
+    int?[][] GetAgeBoard();
+  }
+
   /// <summary>
   /// A simple in-memory implementation of <see cref="IMutableBoard"/>. It supports C# collection
   /// initialiser syntax by virtue of implementing <see cref="IEnumerable{T}"/> and having the
   /// <see cref="Add"/> method.
   /// </summary>
-  public sealed class Board : IMutableBoard, IEnumerable<bool>
+  public sealed class Board : IMutableBoard, IEnumerable<bool>, IAgeArrayBoard
   {
     private readonly int?[][] mCells;
     private static int?[][] NewArray(int width, int height)
@@ -78,6 +83,11 @@ namespace ConwayLib
       }
     }
 
+    int?[][] IAgeArrayBoard.GetAgeBoard()
+    {
+      return mCells;
+    }
+
     #region CollectionInitialiser
 
     public void Add(int x, int y, bool value) => SetCell(x, y, value);
@@ -87,5 +97,5 @@ namespace ConwayLib
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     #endregion
-  }
+    }
 }
