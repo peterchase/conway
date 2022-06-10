@@ -107,6 +107,7 @@ namespace ConwayConsole
         finally
         {        
           Console.CursorVisible = true;
+          Console.ResetColor();
           Console.CancelKeyPress -= HandleCancel;
         }
 
