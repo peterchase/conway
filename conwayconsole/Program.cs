@@ -124,6 +124,7 @@ namespace ConwayConsole
           if (!options.HideDisplay)
           { 
             Console.CursorVisible = true;
+            Console.ResetColor();
             Console.CancelKeyPress -= HandleCancel;
           }
         }
