@@ -18,42 +18,47 @@ namespace ConwayLib
             int maxX = Min(board.Width - 1, x + 1);
             int maxY = Min(board.Height - 1, y + 1);
 
+            //Fast way
             if (board is IAgeArrayBoard ageArrayBoard)
             {
                 int?[][] ageArray = ageArrayBoard.GetAgeBoard();
                 if (minY < y && maxY > y && minX < x && maxX > x)
                 {
-                    if (ageArray[minY][minX].HasValue)
+                    int?[] minYArray = ageArray[minY];
+                    int?[] yArray = ageArray[y];
+                    int?[] maxYArray = ageArray[maxY];
+
+                    if (minYArray[minX].HasValue)
                     {
                         ++neighbours;
                     }
-                    if (ageArray[y][minX].HasValue)
+                    if (yArray[minX].HasValue)
                     {
                         ++neighbours;
                     }
-                    if (ageArray[maxY][minX].HasValue)
+                    if (maxYArray[minX].HasValue)
                     {
                         ++neighbours;
                     }
 
-                    if (ageArray[minY][x].HasValue)
+                    if (minYArray[x].HasValue)
                     {
                         ++neighbours;
                     }
-                    if (ageArray[maxY][x].HasValue)
+                    if (maxYArray[x].HasValue)
                     {
                         ++neighbours;
                     }
 
-                    if (ageArray[minY][maxX].HasValue)
+                    if (minYArray[maxX].HasValue)
                     {
                         ++neighbours;
                     }
-                    if (ageArray[y][maxX].HasValue)
+                    if (yArray[maxX].HasValue)
                     {
                         ++neighbours;
                     }
-                    if (ageArray[maxY][maxX].HasValue)
+                    if (maxYArray[maxX].HasValue)
                     {
                         ++neighbours;
                     }
@@ -61,7 +66,8 @@ namespace ConwayLib
                     return neighbours;
                 }
             }
-
+            
+            //Slow way
             for (int xx = minX; xx <= maxX; ++xx)
             {
                 for (int yy = minY; yy <= maxY; ++yy)
