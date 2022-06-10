@@ -93,6 +93,8 @@ namespace ConwayConsole
             DateTime now = DateTime.UtcNow;
             TimeSpan elapsed = now.Subtract(lastLoopTime);
             TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
+            
+            Console.WriteLine($"\u001b[0;0HThe board size is {board.Width} X {board.Height} the window size {window.Width} X {window.Height}");// \u001b[0;0 is the special code to send the line to the top of the window
             if (delay > TimeSpan.Zero)
             {
               await Task.Delay(delay, cts.Token);
