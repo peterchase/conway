@@ -94,7 +94,6 @@ namespace ConwayConsole
           bool stop = false;
           DateTime lastLoopTime = DateTime.UtcNow;
           for (IReadableBoard board = initialBoard;
-
             !(stop || cts.IsCancellationRequested) && (options.MaxGenerations >= game.Generation);
             board = game.Turn(out stop))
           {

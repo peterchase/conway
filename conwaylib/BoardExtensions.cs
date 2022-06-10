@@ -89,23 +89,23 @@ namespace ConwayLib
 
         /// <summary>
         /// Randomises the state of all cells in <paramref name="board"/>. The proportion of cells that
-        /// are dead is given by <paramref name="deadFraction"/>, which must be between 0 and 1.
+        /// are alive is given by <paramref name="liveFraction"/>, which must be between 0 and 1.
         /// </summary>
-        public static IMutableBoard Randomise(this IMutableBoard board, Random random, double deadFraction)
+        public static IMutableBoard Randomise(this IMutableBoard board, Random random, double liveFraction)
         {
             for (int x = 0; x < board.Width; ++x)
             {
                 for (int y = 0; y < board.Height; ++y)
                 {
-                    board.SetCell(x, y, random.NextDouble() > deadFraction);
+                    board.SetCell(x, y, random.NextDouble() > liveFraction);
                 }
             }
 
             return board;
         }
 
-        public static IMutableBoard Randomise(this IMutableBoard board, double deadFraction)
-          => board.Randomise(new Random(), deadFraction);
+        public static IMutableBoard Randomise(this IMutableBoard board, double liveFraction)
+          => board.Randomise(new Random(), liveFraction);
 
         /// <summary>
         /// Returns a new mutable copy of <paramref name="board"/>.
