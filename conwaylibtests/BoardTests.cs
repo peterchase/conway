@@ -11,7 +11,7 @@ namespace ConwayLib.Tests
     {
         [TestCase("ConwayLib.Tests.TestSparseGameState.json")]
         [TestCase("ConwayLib.Tests.TestDenseGameState.json")]
-        public async Task BoardConstructor_ShouldSetupFromSparseFileCorrectly(string resourcePath)
+        public async Task BoardConstructor_ShouldFromSparseFileCorrectly(string resourcePath)
         {
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath))
             {
@@ -22,7 +22,7 @@ namespace ConwayLib.Tests
                     new bool[] {false,false,false,false,false},
                     new bool[] {false,false,false,false,false},
                     new bool[] {false,false,false,false,false},
-                    new bool[] {true,true,false,false,false},
+                    new bool[] {true,true,false,false,false}
                 };
 
                 Assert.That(expected.FirstOrDefault().Length, Is.EqualTo(myBoard.Width));
