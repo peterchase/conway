@@ -60,10 +60,13 @@ namespace ConwayConsole
         public ColourByType ColourBy {get; set;} = ColourByType.Age;        
 
         [Option('f',"file", Required = false, HelpText = "Load the game's initial state from a file")]
-        public string FilePath {get; set;} = null;        
+        public string FilePath {get; set;} = null;
 
         [Option('i',"hideDisplay", Required = false, HelpText = "Option not to render the simulation. Does not delay between frames either.")]
         public bool HideDisplay {get; set;} = false;
+
+        [Option('g',"maxGenerations", Required = false, HelpText = "Maximimum number of generations performed before the simulation ends.")]
+        public int? MaxGenerations {get; set;} = null;
     }
 
     public enum ColourByType { Age, Neighbours }
