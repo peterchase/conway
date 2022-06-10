@@ -18,19 +18,17 @@ namespace ConwayLib
     public sealed class Board : IMutableBoard, IEnumerable<bool>, IAgeArrayBoard
     {
         private readonly int?[][] mCells;
-        private static int?[][] NewArray(int width, int height)
-        {
-            return Enumerable.Range(0, height)
-              .Select(_ => new int?[width])
-              .ToArray();
-        }
+
         public Board(int width, int height)
         {
-            mCells = NewArray(width, height);
+            mCells = Enumerable.Range(0, height)
+              .Select(_ => new int?[width])
+              .ToArray();
+            Width = width;
         }
-        public Board(GameState state)
+
+        public Board(GameState state) : this(state.Width, state.Height)
         {
-            mCells = NewArray(state.Width, state.Height);
             switch (state.Format)
             {
                 case (DensityOption.Sparse):
@@ -53,8 +51,7 @@ namespace ConwayLib
             using var hasher = new BoolArrayHasher();
             return hasher.GetUniqueHash(mCells.SelectMany(row => row).Select(i => i.HasValue));
         }
-
-        public int Width => mCells.FirstOrDefault()?.Length ?? 0;
+        public int Width {get; }
 
         public int Height => mCells.Length;
 
