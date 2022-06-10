@@ -17,6 +17,26 @@ namespace ConwayLib
             int minY = Max(0, y - 1);
             int maxX = Min(board.Width - 1, x + 1);
             int maxY = Min(board.Height - 1, y + 1);
+            if (board is Board concreteBoard)
+            {
+                for (int xx = minX; xx <= maxX; ++xx)
+                {
+                    for (int yy = minY; yy <= maxY; ++yy)
+                    {
+                        if ((xx == x) && (yy == y))
+                        {
+                            continue;
+                        }
+
+                        if (concreteBoard.Cell(xx, yy))
+                        {
+                            ++neighbours;
+                        }
+                    }
+                }
+                return neighbours;
+            }
+            
             for (int xx = minX; xx <= maxX; ++xx)
             {
                 for (int yy = minY; yy <= maxY; ++yy)
@@ -32,7 +52,6 @@ namespace ConwayLib
                     }
                 }
             }
-
             return neighbours;
         }
 
