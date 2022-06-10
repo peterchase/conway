@@ -15,15 +15,19 @@ namespace ConwayLib.Tests
     }
 
     [TestCase(0, 0, 2)]
-    [TestCase(2, 2, 4)]
+    [TestCase(2, 2, 6)]
     [TestCase(3, 3, 3)]
+    [TestCase(3, 0, 1)]
+    [TestCase(0, 3, 1)]
     public void Neighbours_ShouldGiveCorrectResult(int x, int y, int expected)
     {
       var board = new Board(4, 4)
       {
         { 0, 1, true },
         { 1, 1, true },
+        { 1, 2, true },
         { 2, 2, true },
+        { 3, 1, true },
         { 2, 3, true },
         { 3, 2, true },
         { 3, 3, true },

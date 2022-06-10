@@ -20,7 +20,6 @@ namespace ConwayConsole
 
       if (options==null)
         return;
-      MoveKeyMonitor.Start();
       Func<IReadableBoard, int, int, int> getValueForColour;
       switch (options.ColourBy)
       {
@@ -35,7 +34,12 @@ namespace ConwayConsole
 
       using (var cts = new CancellationTokenSource())
       {
-        Console.CancelKeyPress += HandleCancel;
+        
+        if (!options.HideDisplay)
+        {
+          Console.CancelKeyPress += HandleCancel;
+          MoveKeyMonitor.Start();
+        }
         try
         { 
           if (!options.TryGetWindow(out Rectangle window))
@@ -81,36 +85,49 @@ namespace ConwayConsole
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
-          Console.Clear();
-
-          Console.CursorVisible = false;
-          bool stop = false;
-              
-          DateTime lastLoopTime = DateTime.UtcNow;
-          for (IReadableBoard board = initialBoard; !(stop || cts.IsCancellationRequested); board = game.Turn(out stop))
+          if (!options.HideDisplay)
           {
-            await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder, getValueForColour));
-            DateTime now = DateTime.UtcNow;
-            TimeSpan elapsed = now.Subtract(lastLoopTime);
-            TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
-            
-            Console.WriteLine($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
-            if (delay > TimeSpan.Zero)
-            {
-              await Task.Delay(delay, cts.Token);
-            }
+            Console.Clear();
+            Console.CursorVisible = false;
+          }
 
-            lastLoopTime = DateTime.UtcNow;
+          bool stop = false;
+          DateTime lastLoopTime = DateTime.UtcNow;
+          for (IReadableBoard board = initialBoard;
+            !(stop || cts.IsCancellationRequested) && (options.MaxGenerations >= game.Generation);
+            board = game.Turn(out stop))
+          {
+            if (!options.HideDisplay)
+            {
+              await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder, getValueForColour));
+              DateTime now = DateTime.UtcNow;
+              TimeSpan elapsed = now.Subtract(lastLoopTime);
+              TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
+
+              Console.WriteLine($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
+              if (delay > TimeSpan.Zero)
+              {
+                if (delay > TimeSpan.Zero)
+                {
+                  await Task.Delay(delay, cts.Token);
+                }
+
+                lastLoopTime = DateTime.UtcNow;
+              }
+            }
           }
         }
         catch (OperationCanceledException)
         {
         }
         finally
-        {        
-          Console.CursorVisible = true;
-          Console.ResetColor();
-          Console.CancelKeyPress -= HandleCancel;
+        {       
+          if (!options.HideDisplay)
+          { 
+            Console.CursorVisible = true;
+            Console.ResetColor();
+            Console.CancelKeyPress -= HandleCancel;
+          }
         }
 
         void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();

@@ -32,6 +32,8 @@ namespace ConwayLib
       mEvolution = evolution;
     }
 
+    public int Generation => mHistory.Count;
+    
     /// <summary>
     /// Performs one turn of the game, returning the new state of the board. The returned board
     /// may be modified by subsequent turns.

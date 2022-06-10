@@ -24,10 +24,10 @@ namespace ConwayConsole
         [Option("windowHeight", Required = false, HelpText = "The height of the display")]
         public int? WindowHeight {get; set;} = null;
 
-        [Option("windowX", Required = false, HelpText = "starting x position of the display")]
+        [Option("windowX", Required = false, HelpText = "Starting x position of the display")]
         public int? WindowX {get; set;} = null;
 
-        [Option("windowY", Required = false, HelpText = "starting y position of the display")]
+        [Option("windowY", Required = false, HelpText = "Starting y position of the display")]
         public int? WindowY {get; set;} = null;
 
         public int BoardWidth => Width ?? Console.WindowWidth - 1;
@@ -61,6 +61,12 @@ namespace ConwayConsole
 
         [Option('f',"file", Required = false, HelpText = "Load the game's initial state from a file")]
         public string FilePath {get; set;} = null;
+
+        [Option('i',"hideDisplay", Required = false, HelpText = "Option not to render the simulation. Does not delay between frames either.")]
+        public bool HideDisplay {get; set;} = false;
+
+        [Option('g',"maxGenerations", Required = false, HelpText = "Maximimum number of generations performed before the simulation ends.")]
+        public int MaxGenerations {get; set;} = int.MaxValue;
     }
 
     public enum ColourByType { Age, Neighbours }
