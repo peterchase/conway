@@ -2,6 +2,7 @@ using System;
 using CommandLine;
 using System.Drawing;
 
+using static System.Math;
 namespace ConwayConsole
 {
     public class CommandLineOptions
@@ -38,10 +39,10 @@ namespace ConwayConsole
         {
             int x = WindowX ?? 0;
             int y = WindowY ?? 0;
-            int width = WindowWidth ?? Width ?? Console.WindowWidth - 1;
-            int height = WindowHeight ?? Height ?? Console.WindowHeight - 2;
-
-            window = new Rectangle(x, y, width, height);
+            int width = WindowWidth ?? Console.WindowWidth - 1;
+            int height = WindowHeight ?? Console.WindowHeight - 2;
+            
+            window = new Rectangle(x, y, Min(width,BoardWidth),Min(height,BoardHeight));
             var board  = new Rectangle(0 , 0, BoardWidth, BoardHeight);
             
             if (!board.Contains(window))
