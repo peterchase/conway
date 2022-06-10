@@ -93,6 +93,8 @@ namespace ConwayConsole
             DateTime now = DateTime.UtcNow;
             TimeSpan elapsed = now.Subtract(lastLoopTime);
             TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
+            
+            Console.WriteLine($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
             if (delay > TimeSpan.Zero)
             {
               await Task.Delay(delay, cts.Token);
