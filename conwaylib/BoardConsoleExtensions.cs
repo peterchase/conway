@@ -30,7 +30,7 @@ namespace ConwayLib
 
     };
 
-    private const string cHome = "\u001b[0;0H";
+    public const string cHome = "\u001b[0;0H";
     private const string cDefaultColour = "\u001b[0m";
 
     internal static string ColourCode(int n) => $"\u001b[{sColours[n % sColours.Count]}m";
