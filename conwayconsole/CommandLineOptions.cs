@@ -66,7 +66,7 @@ namespace ConwayConsole
         public bool HideDisplay {get; set;} = false;
 
         [Option('g',"maxGenerations", Required = false, HelpText = "Maximimum number of generations performed before the simulation ends.")]
-        public int? MaxGenerations {get; set;} = null;
+        public int MaxGenerations {get; set;} = int.MaxValue;
     }
 
     public enum ColourByType { Age, Neighbours }
