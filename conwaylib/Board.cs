@@ -12,26 +12,24 @@ namespace ConwayLib
   /// </summary>
   public sealed class Board : IMutableBoard, IEnumerable<bool>
   {
-    private int?[][] mCells;
-
-    public Board(int width, int height)
+    private readonly int?[][] mCells;
+    private static int?[][] NewArray(int width, int height)
     {
-      mCells = Enumerable.Range(0, height)
+      return Enumerable.Range(0, height)
         .Select(_ => new int?[width])
         .ToArray();
     }
+    public Board(int width, int height)
+    {
+      mCells = NewArray(width, height);
+    }
     public Board(GameState state)
     {
-      mCells = Enumerable.Range(0, state.Height)
-        .Select(_ => new int?[state.Width])
-        .ToArray();
+      mCells = NewArray(state.Width, state.Height);
         switch (state.Format)
         {
           case (DensityOption.Sparse):
-            Array.ForEach(state.SparseData, (p)=>
-            {
-              SetCell(p.X, p.Y, true);
-            });
+            Array.ForEach(state.SparseData, (p)=> SetCell(p.X, p.Y, true));
             break;
           case (DensityOption.Dense):
             for (int x = 0; x < Width; x++)
