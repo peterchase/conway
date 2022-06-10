@@ -5,10 +5,6 @@ using System.Linq;
 
 namespace ConwayLib
 {
-    public interface IAgeArrayBoard
-    {
-        int?[][] GetAgeBoard();
-    }
 
     /// <summary>
     /// A simple in-memory implementation of <see cref="IMutableBoard"/>. It supports C# collection
@@ -78,10 +74,7 @@ namespace ConwayLib
             }
         }
 
-        int?[][] IAgeArrayBoard.GetAgeBoard()
-        {
-            return mCells;
-        }
+        int?[][] IAgeArrayBoard.GetAgeBoard()=> mCells;
 
         #region CollectionInitialiser
 
