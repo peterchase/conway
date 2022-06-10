@@ -21,23 +21,45 @@ namespace ConwayLib
             if (board is IAgeArrayBoard ageArrayBoard)
             {
                 int?[][] ageArray = ageArrayBoard.GetAgeBoard();
-                for (int xx = minX; xx <= maxX; ++xx)
+                if (minY < y && maxY > y && minX < x && maxX > x)
                 {
-                    for (int yy = minY; yy <= maxY; ++yy)
+                    if (ageArray[minY][minX].HasValue)
                     {
-                        if ((xx == x) && (yy == y))
-                        {
-                            continue;
-                        }
-
-                        if (ageArray[yy][xx].HasValue)
-                        {
-                            ++neighbours;
-                        }
+                        ++neighbours;
                     }
-                }
+                    if (ageArray[y][minX].HasValue)
+                    {
+                        ++neighbours;
+                    }
+                    if (ageArray[maxY][minX].HasValue)
+                    {
+                        ++neighbours;
+                    }
 
-                return neighbours;
+                    if (ageArray[minY][x].HasValue)
+                    {
+                        ++neighbours;
+                    }
+                    if (ageArray[maxY][x].HasValue)
+                    {
+                        ++neighbours;
+                    }
+
+                    if (ageArray[minY][maxX].HasValue)
+                    {
+                        ++neighbours;
+                    }
+                    if (ageArray[y][maxX].HasValue)
+                    {
+                        ++neighbours;
+                    }
+                    if (ageArray[maxY][maxX].HasValue)
+                    {
+                        ++neighbours;
+                    }
+
+                    return neighbours;
+                }
             }
 
             for (int xx = minX; xx <= maxX; ++xx)
