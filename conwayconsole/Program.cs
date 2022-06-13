@@ -82,13 +82,9 @@ namespace ConwayConsole
 
           };
 
-          IReadableBoard board = null;
-           KeyMonitor.Save += (_, args) => 
-          {
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
-             Task.Run(() => GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path));
-          };
-
+          bool save = false;
+          KeyMonitor.Save += (_, args) => save = true;
+          
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
@@ -100,7 +96,7 @@ namespace ConwayConsole
 
           bool stop = false;
           DateTime lastLoopTime = DateTime.UtcNow;
-          for (board = initialBoard;
+          for (IReadableBoard board = initialBoard;
             !(stop || cts.IsCancellationRequested) && (options.MaxGenerations >= game.Generation);
             board = game.Turn(out stop))
           {
@@ -121,6 +117,14 @@ namespace ConwayConsole
 
                 lastLoopTime = DateTime.UtcNow;
               }
+            }
+
+            if (save)
+            {
+              string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
+              await GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path);
+              Console.WriteLine(path);
+              break;
             }
           }
         }
