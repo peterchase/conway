@@ -38,7 +38,7 @@ namespace ConwayConsole
         if (!options.HideDisplay)
         {
           Console.CancelKeyPress += HandleCancel;
-          MoveKeyMonitor.Start();
+          KeyMonitor.Start();
         }
         try
         { 
@@ -74,7 +74,7 @@ namespace ConwayConsole
             initialBoard.Randomise(random, density);
           }
 
-          MoveKeyMonitor.Movement += (_, args) => 
+          KeyMonitor.Movement += (_, args) => 
           {
              
               window.X = Math.Min(Math.Max(0, args.Horizontal + window.X), initialBoard.Width - window.Width);

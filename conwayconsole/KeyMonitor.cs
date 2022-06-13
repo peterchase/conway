@@ -4,9 +4,11 @@ using System.Threading;
 namespace ConwayConsole
 {
 
-    internal static class MoveKeyMonitor
+    internal static class KeyMonitor
     {
         public static event EventHandler<MovementEventArgs> Movement;
+
+        public static event EventHandler<EventArgs> Save;
 
         public static void Start()
         {
@@ -34,6 +36,11 @@ namespace ConwayConsole
                         
                     case ConsoleKey.DownArrow:
                         Movement?.Invoke(null, new MovementEventArgs(1, 0));
+                        break;
+                    
+                    case ConsoleKey.S:
+                        Save?.Invoke(null, new EventArgs());
+
                         break;
                         
                     default:
