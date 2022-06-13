@@ -82,6 +82,12 @@ namespace ConwayConsole
 
           };
 
+          IReadableBoard board = null;
+           KeyMonitor.Save += (_, args) => 
+          {
+             Task.Run(() => GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), @"c:\users\user2\state.json"));
+          };
+
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
@@ -93,7 +99,7 @@ namespace ConwayConsole
 
           bool stop = false;
           DateTime lastLoopTime = DateTime.UtcNow;
-          for (IReadableBoard board = initialBoard;
+          for (board = initialBoard;
             !(stop || cts.IsCancellationRequested) && (options.MaxGenerations >= game.Generation);
             board = game.Turn(out stop))
           {
