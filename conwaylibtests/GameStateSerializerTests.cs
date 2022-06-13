@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Reflection;
+using System.IO;
 
 namespace ConwayLib.Tests
 {
@@ -34,7 +35,32 @@ namespace ConwayLib.Tests
                 //state.Format = DensityOption.Sparse;
                 Assert.That(result.Format, Is.EqualTo(DensityOption.Sparse));
 
-                await GameStateSerializer.SerializeJson(@"C:\Users\user3\Git\conway\conwaylibtests\SerializeTest.json", result);
+                await GameStateSerializer.SerializeJson(@"C:\Users\user3\Git\conway\conwaylibtests\SerializeTestSparse.json", result);
+            }
+        }
+
+        [Test]
+        public async Task GameStateSerializer_ShouldSserializeDenseCorrectly()
+        {
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestDenseGameState.json"))
+            {
+                GameState result = await GameStateSerializer.DeserializeJson(stream);
+
+                //state.Format = DensityOption.Sparse;
+                Assert.That(result.Format, Is.EqualTo(DensityOption.Dense));
+
+                await GameStateSerializer.SerializeJson(@"C:\Users\user3\Git\conway\conwaylibtests\SerializeTestDense.json", result);
+            }
+        }
+
+        [TestCase(@"C:\Users\user3\Git\conway\conwaylibtests\SerializeTestDense.json")]
+        public async Task GameStateSerializer_ShouldReDeserializeSparseCorrectly(string path)
+        {
+            using (var stream = File.OpenRead(path))
+            {
+                GameState result = await GameStateSerializer.DeserializeJson(stream);
+
+                Assert.That(result.Format, Is.EqualTo(DensityOption.Dense));
             }
         }
     }
