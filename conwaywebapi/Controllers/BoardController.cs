@@ -36,8 +36,8 @@ namespace ConwayWebApi.Controllers
             return NoContent();
         }
 
-        // Post a new board
-        [HttpPost]
+        // Put a new board
+        [HttpPut]
         public async Task<ActionResult<BoardInfo>> CreateBoard(BoardDetail detail)
         {
             await Task.Delay(10); // TODO remove fake delay
