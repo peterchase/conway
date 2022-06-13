@@ -30,10 +30,10 @@ namespace ConwayWebApi.Controllers
 
         // Get the contents of a board with a particular ID
         [HttpGet("{id}")]
-        public async Task<BoardDetail> Get(int id)
+        public async Task<ActionResult<BoardDetail>> Get(int id)
         {
             await Task.Delay(10); // TODO remove fake delay
-            return null;
+            return NoContent();
         }
 
         // Post a new board
