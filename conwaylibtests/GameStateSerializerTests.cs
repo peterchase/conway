@@ -24,5 +24,18 @@ namespace ConwayLib.Tests
             }
         }
 
+        [Test]
+        public async Task GameStateSerializer_ShouldSserializeSparseCorrectly()
+        {
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestSparseGameState.json"))
+            {
+                GameState result = await GameStateSerializer.DeserializeJson(stream);
+
+                //state.Format = DensityOption.Sparse;
+                Assert.That(result.Format, Is.EqualTo(DensityOption.Sparse));
+
+                await GameStateSerializer.SerializeJson(@"C:\Users\user3\Git\conway\conwaylibtests\SerializeTest.json", result);
+            }
+        }
     }
 }
