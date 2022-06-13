@@ -126,10 +126,11 @@ namespace ConwayLib
             return newBoard;
         }
 
-        public static GameState GetCurrentState(this Board board, DensityOption option)
+        public static GameState GetCurrentState(this IReadableBoard board, DensityOption option)
         {
             var state = new GameState
             {
+                Format = option,
                 Width = board.Width,
                 Height = board.Height
             };
@@ -158,6 +159,7 @@ namespace ConwayLib
                             }
                         }
                     }
+                    state.SparseData = tempPoints.ToArray();
                     break;
             }
             return state;
