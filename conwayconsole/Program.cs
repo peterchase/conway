@@ -85,7 +85,8 @@ namespace ConwayConsole
           IReadableBoard board = null;
            KeyMonitor.Save += (_, args) => 
           {
-             Task.Run(() => GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), @"c:\users\user2\state.json"));
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
+             Task.Run(() => GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path));
           };
 
           var game = new Game(initialBoard, StandardEvolution.Instance);
