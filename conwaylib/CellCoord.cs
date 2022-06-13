@@ -2,7 +2,7 @@ using System;
 
 namespace ConwayLib
 {
-    public struct CellCoord : IEquatable<CellCoord>
+    public class CellCoord : IEquatable<CellCoord>
     {
         public int X { get; set; }
         public int Y { get; set;  }
@@ -24,5 +24,9 @@ namespace ConwayLib
         {
             return $"({X}, {Y})";
         }
+
+        public override bool Equals(object obj)  { return base.Equals(obj); }
+
+        public override int GetHashCode() { return base.GetHashCode(); }
     }
 }
