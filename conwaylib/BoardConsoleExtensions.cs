@@ -77,42 +77,5 @@ namespace ConwayLib
 
             return builder.ToString();
         }
-
-        public static GameState GetCurrentState(this Board board, DensityOption option)
-        {
-            var state = new GameState
-            {
-                Width = board.Width,
-                Height = board.Height
-            };
-            switch (option)
-            {
-                case DensityOption.Dense:
-                    state.DenseData = new bool[state.Height][];
-                    for (int y = 0; y < board.Height; y++)
-                    {
-                        state.DenseData[y] = new bool[state.Width];
-                        for (int x = 0; x < board.Width; x++)
-                        {
-                            state.DenseData[y][x] = board.Cell(x, y);
-                        }
-                    }
-                    break;
-                case DensityOption.Sparse:
-                    List<Point> tempPoints = new();
-                    for (int y = 0; y < board.Height; y++)
-                    {
-                        for (int x = 0; x < board.Width; x++)
-                        {
-                            if (board.Cell(x, y))
-                            {
-                                tempPoints.Add(new Point(x, y));
-                            }
-                        }
-                    }
-                    break;
-            }
-            return state;
-        }
     }
 }
