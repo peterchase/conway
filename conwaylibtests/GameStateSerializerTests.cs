@@ -30,7 +30,7 @@ namespace ConwayLib.Tests
         [TestCase(0,5,5, DensityOption.Dense)]
         [TestCase(0,50,50, DensityOption.Dense)]
         [TestCase(0,150,150, DensityOption.Sparse)]
-        [TestCase(0,1500,1500, DensityOption.Sparse, true)]
+        [TestCase(0,1500,1500, DensityOption.Sparse)]
         public async Task GameStateSerializer_ShouldSerializeCorrectly(int seed, int width, int height, DensityOption option, bool outputToFile = false)
         {
             var sw = new Stopwatch();
