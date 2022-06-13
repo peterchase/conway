@@ -146,7 +146,7 @@ namespace ConwayLib
                 case DensityOption.Sparse:
                     state.SparseData = Enumerable.Range(0, board.Height)
                         .Select(y => Enumerable.Range(0, board.Width)
-                            .Select(x => new Point(x, y)))
+                            .Select(x => new CellCoord(x, y)))
                         .SelectMany(xy => xy)
                         .Where(xy => board.Cell(xy.X, xy.Y))
                         .ToArray();

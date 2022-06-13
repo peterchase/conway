@@ -16,12 +16,12 @@ namespace ConwayLib.Tests
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConwayLib.Tests.TestSparseGameState.json"))
             {
                 GameState result = await GameStateSerializer.DeserializeJson(stream);
-                Point[] pointData = result.SparseData;
+                CellCoord[] pointData = result.SparseData;
 
                 Assert.That(result.Format, Is.EqualTo(DensityOption.Sparse));
                 Assert.That(pointData, Is.Not.Null);                
                 Assert.That(result.Width, Is.EqualTo(5));
-                Assert.That(pointData[0], Is.EqualTo(new Point(0, 4)));
+                Assert.That(pointData[0], Is.EqualTo(new CellCoord(0, 4)));
             }
         }
 

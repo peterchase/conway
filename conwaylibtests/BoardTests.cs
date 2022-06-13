@@ -32,7 +32,7 @@ namespace ConwayLib.Tests
                 {
                     for (int y = 0; y < result.Height; y++)
                     {
-                        Assert.That(myBoard.Cell(x,y), Is.EqualTo(expected[y][x]));
+                        Assert.That(myBoard.Cell(x,y), Is.EqualTo(expected[y][x]), $"({x},{y})");
                     }
                 }
             }

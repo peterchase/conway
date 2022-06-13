@@ -12,7 +12,7 @@ namespace ConwayLib
         public string FormatText {get; set;}
         [JsonIgnore]
         public DensityOption Format { get { return Enum.Parse<DensityOption>(FormatText); } set {FormatText = value.ToString();} }
-        public Point[] SparseData {get; set;}
+        public CellCoord[] SparseData {get; set;}
         public bool[][] DenseData { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
