@@ -44,8 +44,13 @@ namespace ConwayLib.Tests
             sw.Stop();
 
             if (outputToFile)
-                using (StreamWriter fs = new StreamWriter(File.Open(@"C:\Users\user3\Git\conway\conwaylibtests\TempSerializedData", FileMode.Create)))
+            {
+                using (StreamWriter fs = new StreamWriter(File.Open(@"C:\Users\user3\Git\conway\conwaylibtests\TempSerialized.data", FileMode.Create)))
                     await fs.WriteLineAsync($"{width}x{height}: {sw.ElapsedMilliseconds}ms");
+                using (Stream fs = File.Open(@"C:\Users\user3\Git\conway\conwaylibtests\TempSerialized.json", FileMode.Create))
+                    await GameStateSerializer.SerializeJson(state, fs);
+            }
+                
 
             stream.Position = 0;
 
