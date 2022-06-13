@@ -1,6 +1,6 @@
 using System;
 
-namespace conwaywebapi
+namespace ConwayWebApi
 {
     public class WeatherForecast
     {
