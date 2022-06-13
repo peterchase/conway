@@ -16,8 +16,8 @@ namespace ConwayLib.TestCase
             CellCoord c2 = new(0,0);
 
             Assert.That(c1.X, Is.EqualTo(0));
-
             Assert.That(c1, Is.EqualTo(c2));
+            Assert.That(c1.GetHashCode(), Is.EqualTo(c2.GetHashCode()));
         }
     }
 }
