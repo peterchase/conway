@@ -4,12 +4,12 @@ namespace ConwayWebApi.Models
     {
         public BoardInfo Info { get; }
 
-        public bool[][] Cells { get; }
+        public CellCoord[] LiveCells { get; }
 
-        public BoardDetail(BoardInfo info, bool[][] cells)
+        public BoardDetail(BoardInfo info, CellCoord[] liveCells)
         {
             Info = info;
-            Cells = cells;
+            LiveCells = liveCells;
         }
     }
 }
