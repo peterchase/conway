@@ -30,7 +30,7 @@ namespace ConwayLib.Tests
         [TestCase(0,5,5, DensityOption.Dense)]
         [TestCase(0,50,50, DensityOption.Dense)]
         [TestCase(0,150,150, DensityOption.Sparse)]
-        [TestCase(0,1500,1500, DensityOption.Sparse)]
+        [TestCase(0,1500,1500, DensityOption.Sparse, false)]
         public async Task GameStateSerializer_ShouldSerializeCorrectly(int seed, int width, int height, DensityOption option, bool outputToFile = false)
         {
             var sw = new Stopwatch();
@@ -48,11 +48,13 @@ namespace ConwayLib.Tests
                 using (StreamWriter fs = new StreamWriter(File.Open(@"C:\Users\user3\Git\conway\conwaylibtests\TempSerialized.data", FileMode.Create)))
                     await fs.WriteLineAsync($"{width}x{height}: {sw.ElapsedMilliseconds}ms");
                 using (Stream fs = File.Open(@"C:\Users\user3\Git\conway\conwaylibtests\TempSerialized.json", FileMode.Create))
-                    await GameStateSerializer.SerializeJson(state, fs);
-            }
-                
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    await stream.CopyToAsync(fs);
+                }
+            }                
 
-            stream.Position = 0;
+            stream.Seek(0, SeekOrigin.Begin);
 
             var reDeserialized = await GameStateSerializer.DeserializeJson(stream);
 
