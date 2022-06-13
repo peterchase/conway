@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Drawing;
 using static System.Math;
 
 namespace ConwayLib
@@ -122,6 +125,34 @@ namespace ConwayLib
             }
 
             return newBoard;
+        }
+
+        public static GameState GetCurrentState(this IReadableBoard board, DensityOption option)
+        {
+            var state = new GameState
+            {
+                Format = option,
+                Width = board.Width,
+                Height = board.Height
+            };
+            switch (option)
+            {
+                case DensityOption.Dense:
+                    state.DenseData = Enumerable.Range(0, board.Height)
+                        .Select(y => Enumerable.Range(0, board.Width)
+                            .Select(x => board.Cell(x, y)).ToArray())
+                        .ToArray();
+                    break;
+                case DensityOption.Sparse:
+                    state.SparseData = Enumerable.Range(0, board.Height)
+                        .Select(y => Enumerable.Range(0, board.Width)
+                            .Select(x => new CellCoord(x, y)))
+                        .SelectMany(xy => xy)
+                        .Where(xy => board.Cell(xy.X, xy.Y))
+                        .ToArray();
+                    break;
+            }
+            return state;
         }
     }
 }
