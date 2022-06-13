@@ -22,17 +22,13 @@ namespace ConwayLib
         public static async Task SerializeJson(GameState state, Stream stream)
         {
             await JsonSerializer.SerializeAsync(stream, state);
+            stream.Flush();
         }
 
         public static async Task SerializeJson(GameState state, string filePath)
         {
             using FileStream stream = File.Open(filePath, FileMode.Create);
             await SerializeJson(state, stream);
-        }
-
-        public static async Task<string> SerializeJson(GameState state)
-        {
-            return await SerializeJson(state);
         }
     }
 }
