@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using static System.Math;
@@ -137,29 +138,18 @@ namespace ConwayLib
             switch (option)
             {
                 case DensityOption.Dense:
-                    state.DenseData = new bool[state.Height][];
-                    for (int y = 0; y < board.Height; y++)
-                    {
-                        state.DenseData[y] = new bool[state.Width];
-                        for (int x = 0; x < board.Width; x++)
-                        {
-                            state.DenseData[y][x] = board.Cell(x, y);
-                        }
-                    }
+                    state.DenseData = Enumerable.Range(0, board.Height)
+                        .Select(y => Enumerable.Range(0, board.Width)
+                            .Select(x => board.Cell(x, y)).ToArray())
+                        .ToArray();
                     break;
                 case DensityOption.Sparse:
-                    List<Point> tempPoints = new();
-                    for (int y = 0; y < board.Height; y++)
-                    {
-                        for (int x = 0; x < board.Width; x++)
-                        {
-                            if (board.Cell(x, y))
-                            {
-                                tempPoints.Add(new Point(x, y));
-                            }
-                        }
-                    }
-                    state.SparseData = tempPoints.ToArray();
+                    state.SparseData = Enumerable.Range(0, board.Height)
+                        .Select(y => Enumerable.Range(0, board.Width)
+                            .Select(x => new Point(x, y)))
+                        .SelectMany(xy => xy)
+                        .Where(xy => board.Cell(xy.X, xy.Y))
+                        .ToArray();
                     break;
             }
             return state;
