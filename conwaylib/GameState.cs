@@ -11,8 +11,8 @@ namespace ConwayLib
         [JsonPropertyName("Format")]
         public string FormatText {get; set;}
         [JsonIgnore]
-        public DensityOption Format { get { return Enum.Parse<DensityOption>(FormatText); } }
-        public Point[] SparseData {get; set;}
+        public DensityOption Format { get { return Enum.Parse<DensityOption>(FormatText); } set {FormatText = value.ToString();} }
+        public CellCoord[] SparseData {get; set;}
         public bool[][] DenseData { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
