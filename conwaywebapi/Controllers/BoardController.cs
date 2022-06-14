@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ConwayWebApi.Models;
+using ConwayWebApi.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConwayWebApi.Controllers
 {
@@ -14,43 +16,61 @@ namespace ConwayWebApi.Controllers
     public class BoardController : ControllerBase
     {
         private readonly ILogger<BoardController> _logger;
+        private readonly ConwayContext _context;
 
-        public BoardController(ILogger<BoardController> logger)
+        public BoardController(ILogger<BoardController> logger, ConwayContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         // Get all the boards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BoardInfo>>> Get()
+        public async Task<ActionResult<IEnumerable<BoardInfo>>> ListBoards()
         {
-            await Task.Delay(10); // TODO remove fake delay
-            return Array.Empty<BoardInfo>();
+            return await _context.Boards.Select(b => new BoardInfo(b, b.ID)).ToListAsync();
         }
 
         // Get the contents of a board with a particular ID
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BoardDetail>> Get(int id)
+        [HttpGet("{id}", Name = nameof(GetBoard))]
+        public async Task<ActionResult<BoardDetail>> GetBoard(int id)
         {
-            await Task.Delay(10); // TODO remove fake delay
-            return NoContent();
+            var board = await _context.Boards.Include(b => b.BoardCells).FirstOrDefaultAsync(b => b.ID == id);
+            if (board == null)
+            {
+                return NotFound();
+            }
+
+            return new BoardDetail(board, id);
         }
 
         // Put a new board
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult<BoardInfo>> CreateBoard(BoardDetail detail)
         {
-            await Task.Delay(10); // TODO remove fake delay
-            int fakeId = 123;
-            return CreatedAtAction(nameof(BoardDetail), new { id = fakeId }, detail.Info);
+            var board = _context.Boards.Add(new Board(detail)).Entity;
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(
+                nameof(GetBoard),
+                new { board.ID },
+                new BoardInfo(detail.Info, board.ID));
         }
 
         // Delete a board with a particular ID
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBoard(int id)
         {
-            await Task.Delay(10); // TODO remove fake delay
-            return NotFound();
+            var board = await _context.Boards.FindAsync(id);
+
+            if (board == null)
+            {
+                return NotFound();
+            }
+
+            _context.Boards.Remove(board);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
