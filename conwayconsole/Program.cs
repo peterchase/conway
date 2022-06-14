@@ -144,22 +144,29 @@ namespace ConwayConsole
                 void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
             }
         }
+
+        private static async Task<bool> YesNo(string prompt = null)
+        {
+          await Console.Out.WriteAsync(prompt);
+          string response = (await Console.In.ReadLineAsync()).ToLower();
+          return response == "y" || response == "yes";
+        }
         private static async Task Save(IReadableBoard boardToSave)
         {
             if (boardToSave != null)
             {
                 await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
-                string pathway = Console.ReadLine();
+                string pathway = await Console.In.ReadLineAsync();
 
                 bool pathwayIsNullOrEmpty = string.IsNullOrEmpty(pathway);
+                
                 if (!pathwayIsNullOrEmpty)
                 {
+                    pathway = Path.ChangeExtension(pathway, ".json");
                     string dir = Path.GetDirectoryName(pathway);
                     if (dir != null && !Directory.Exists(dir))
                     {
-                        await Console.Out.WriteAsync("Do you want to make a new directory [Y/N]: ");
-                        string response = Console.ReadLine().ToLower();
-                        if (response == "y" || response == "yes")
+                        if (await YesNo("Do you want to make a new directory [Y/N]: "))
                         {
                             Directory.CreateDirectory(dir);
                         }
@@ -168,13 +175,20 @@ namespace ConwayConsole
                             return;
                         }
                     }
-
                 }
 
                 if (pathwayIsNullOrEmpty)
                 {
                     pathway = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
                 }
+                else if (File.Exists(pathway))
+                {
+                  if (!await YesNo("An existing file with that name already exists. Do you want to override it [Y/N]: "))
+                  {
+                    pathway = Path.Combine(Path.GetDirectoryName(pathway), $"{Path.GetFileNameWithoutExtension(pathway)}-{Guid.NewGuid():N}.json");
+                  }
+                }
+                
                 await GameStateSerializer.SerializeJson(boardToSave.GetCurrentState(DensityOption.Sparse), pathway);
                 Console.WriteLine(Path.GetFullPath(pathway));
             }
