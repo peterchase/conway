@@ -38,7 +38,7 @@ namespace ConwayConsole
         if (!options.HideDisplay)
         {
           Console.CancelKeyPress += HandleCancel;
-          MoveKeyMonitor.Start();
+          KeyMonitor.Start();
         }
         try
         { 
@@ -74,7 +74,7 @@ namespace ConwayConsole
             initialBoard.Randomise(random, density);
           }
 
-          MoveKeyMonitor.Movement += (_, args) => 
+          KeyMonitor.Movement += (_, args) => 
           {
              
               window.X = Math.Min(Math.Max(0, args.Horizontal + window.X), initialBoard.Width - window.Width);
@@ -82,6 +82,9 @@ namespace ConwayConsole
 
           };
 
+          bool save = false;
+          KeyMonitor.Save += (_, args) => save = true;
+          
           var game = new Game(initialBoard, StandardEvolution.Instance);
           var builder = new StringBuilder();
 
@@ -114,6 +117,14 @@ namespace ConwayConsole
 
                 lastLoopTime = DateTime.UtcNow;
               }
+            }
+
+            if (save)
+            {
+              string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
+              await GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path);
+              Console.WriteLine(path);
+              break;
             }
           }
         }
