@@ -1,3 +1,5 @@
+using ConwayWebApi.Database;
+
 namespace ConwayWebApi.Models
 {
     public sealed class BoardInfo
@@ -7,6 +9,15 @@ namespace ConwayWebApi.Models
             Width = width;
             Height = height;
             Description = description;
+            Id = id;
+        }
+        public BoardInfo(Board board, int? id = null)
+        {
+            
+            Width = board.Width;
+            Height = board.Height;
+            Description = board.Description;
+            Id = id;
         }
 
         public int Width { get; }
