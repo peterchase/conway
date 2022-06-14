@@ -19,13 +19,21 @@ namespace ConwayWebApi.Models
             Description = board.Description;
             Id = id;
         }
+        public BoardInfo(BoardInfo oldInfo, int? id = null)
+        {
+            Width = oldInfo.Width;
+            Height = oldInfo.Height;
+            Description = oldInfo.Description;
+            Id = id;
+        }
+        public BoardInfo() {}
 
-        public int Width { get; }
+        public int Width { get; set; }
 
-        public int Height { get; }
+        public int Height { get; set; }
 
-        public string Description { get; }
+        public string Description { get; set; }
 
-        public int? Id { get; }
+        public int? Id { get; set; }
     }
 }

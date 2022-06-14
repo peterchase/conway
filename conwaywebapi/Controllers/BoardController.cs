@@ -26,14 +26,14 @@ namespace ConwayWebApi.Controllers
 
         // Get all the boards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BoardInfo>>> Get()
+        public async Task<ActionResult<IEnumerable<BoardInfo>>> ListBoards()
         {
             return await _context.Boards.Select(b => new BoardInfo(b, b.ID)).ToListAsync();
         }
 
         // Get the contents of a board with a particular ID
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BoardDetail>> Get(int id)
+        [HttpGet("{id}", Name = nameof(GetBoard))]
+        public async Task<ActionResult<BoardDetail>> GetBoard(int id)
         {
             var board = await _context.Boards.Include(b => b.BoardCells).FirstOrDefaultAsync(b => b.ID == id);
             if (board == null)
@@ -45,20 +45,32 @@ namespace ConwayWebApi.Controllers
         }
 
         // Put a new board
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult<BoardInfo>> CreateBoard(BoardDetail detail)
         {
-            await Task.Delay(10); // TODO remove fake delay
-            int fakeId = 123;
-            return CreatedAtAction(nameof(BoardDetail), new { id = fakeId }, detail.Info);
+            var id = _context.Boards.Add(new Board(detail)).Entity.ID;
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(
+                nameof(GetBoard),
+                new { id },
+                new BoardInfo(detail.Info, id));
         }
 
         // Delete a board with a particular ID
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBoard(int id)
         {
-            await Task.Delay(10); // TODO remove fake delay
-            return NotFound();
+            var board = await _context.Boards.FindAsync(id);
+
+            if (board == null)
+            {
+                return NotFound();
+            }
+
+            _context.Boards.Remove(board);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
