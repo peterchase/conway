@@ -48,12 +48,12 @@ namespace ConwayWebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<BoardInfo>> CreateBoard(BoardDetail detail)
         {
-            var id = _context.Boards.Add(new Board(detail)).Entity.ID;
+            var board = _context.Boards.Add(new Board(detail)).Entity;
             await _context.SaveChangesAsync();
             return CreatedAtAction(
                 nameof(GetBoard),
-                new { id },
-                new BoardInfo(detail.Info, id));
+                new { board.ID },
+                new BoardInfo(detail.Info, board.ID));
         }
 
         // Delete a board with a particular ID
