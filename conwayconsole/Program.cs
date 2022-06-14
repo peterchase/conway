@@ -42,6 +42,7 @@ namespace ConwayConsole
                 }
 
                 IReadableBoard boardToSave = null;
+                bool saveToDatabase = false;
                 try
                 {
                     if (!options.TryGetWindow(out Rectangle window))
@@ -84,8 +85,9 @@ namespace ConwayConsole
 
                     };
 
-                    bool save = false;
-                    KeyMonitor.Save += (_, args) => save = true;
+                    (bool save, bool database) save = (false, false);
+                    KeyMonitor.Save += (_, _) => save = (true, false);
+                    KeyMonitor.Database += (_, _) => save = (true, true);
 
                     var game = new Game(initialBoard, StandardEvolution.Instance);
                     var builder = new StringBuilder();
@@ -121,9 +123,10 @@ namespace ConwayConsole
                             }
                         }
 
-                        if (save)
+                        if (save.save)
                         {
                             boardToSave = board;
+                            saveToDatabase = save.database;
                             break;
                         }
                     }
@@ -143,7 +146,7 @@ namespace ConwayConsole
 
                 if (boardToSave != null)
                 {
-                    await Save(boardToSave);
+                    await Save(boardToSave, saveToDatabase);
                 }
 
                 void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
@@ -157,9 +160,26 @@ namespace ConwayConsole
             return response == "y" || response == "yes";
         }
 
-        private static async Task Save(IReadableBoard boardToSave)
+        private static async Task Save(IReadableBoard boardToSave, bool saveToDatabase)
         {
-            await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
+            if (saveToDatabase)
+            {
+              await SaveToDatabase(boardToSave);
+            }
+            else
+            {
+              await SaveToFile(boardToSave);
+            }
+        }
+
+        private static async Task SaveToDatabase(IReadableBoard boardToSave)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static async Task SaveToFile(IReadableBoard boardToSave)
+        {
+          await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
             string path = await Console.In.ReadLineAsync();
 
             if (string.IsNullOrWhiteSpace(path))
