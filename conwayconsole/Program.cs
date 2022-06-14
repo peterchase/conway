@@ -41,6 +41,7 @@ namespace ConwayConsole
                     KeyMonitor.Start();
                 }
 
+                IReadableBoard boardToSave = null;
                 try
                 {
                     if (!options.TryGetWindow(out Rectangle window))
@@ -122,8 +123,7 @@ namespace ConwayConsole
 
                         if (save)
                         {
-                            await Save(board);
-                            save = false;
+                            boardToSave = board;
                             break;
                         }
                     }
@@ -141,57 +141,58 @@ namespace ConwayConsole
                     }
                 }
 
+                if (boardToSave != null)
+                {
+                    await Save(boardToSave);
+                }
+
                 void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
             }
         }
 
-        private static async Task<bool> YesNo(string prompt = null)
+        private static async Task<bool> YesNo(string prompt)
         {
-          await Console.Out.WriteAsync(prompt);
-          string response = (await Console.In.ReadLineAsync()).ToLower();
-          return response == "y" || response == "yes";
+            await Console.Out.WriteAsync(prompt);
+            string response = (await Console.In.ReadLineAsync()).ToLower();
+            return response == "y" || response == "yes";
         }
+
         private static async Task Save(IReadableBoard boardToSave)
         {
-            if (boardToSave != null)
-            {
-                await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
-                string pathway = await Console.In.ReadLineAsync();
+            await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
+            string path = await Console.In.ReadLineAsync();
 
-                bool pathwayIsNullOrEmpty = string.IsNullOrEmpty(pathway);
-                
-                if (!pathwayIsNullOrEmpty)
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
+            }
+            else
+            {
+                path = Path.ChangeExtension(path, ".json");
+                string dir = Path.GetDirectoryName(path);
+                if (dir != null && !Directory.Exists(dir))
                 {
-                    pathway = Path.ChangeExtension(pathway, ".json");
-                    string dir = Path.GetDirectoryName(pathway);
-                    if (dir != null && !Directory.Exists(dir))
+                    if (await YesNo("Do you want to make a new directory [Y/N]: "))
                     {
-                        if (await YesNo("Do you want to make a new directory [Y/N]: "))
-                        {
-                            Directory.CreateDirectory(dir);
-                        }
-                        else
-                        {
-                            return;
-                        }
+                        Directory.CreateDirectory(dir);
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
-
-                if (pathwayIsNullOrEmpty)
-                {
-                    pathway = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
-                }
-                else if (File.Exists(pathway))
-                {
-                  if (!await YesNo("An existing file with that name already exists. Do you want to override it [Y/N]: "))
-                  {
-                    pathway = Path.Combine(Path.GetDirectoryName(pathway), $"{Path.GetFileNameWithoutExtension(pathway)}-{Guid.NewGuid():N}.json");
-                  }
-                }
-                
-                await GameStateSerializer.SerializeJson(boardToSave.GetCurrentState(DensityOption.Sparse), pathway);
-                Console.WriteLine(Path.GetFullPath(pathway));
             }
+
+            if (File.Exists(path))
+            {
+                if (!await YesNo("An existing file with that name already exists. Do you want to overwrite it [Y/N]: "))
+                {
+                    path = Path.Combine(Path.GetDirectoryName(path), $"{Path.GetFileNameWithoutExtension(path)}-{Guid.NewGuid():N}.json");
+                }
+            }
+
+            await GameStateSerializer.SerializeJson(boardToSave.GetCurrentState(DensityOption.Sparse), path);
+            await Console.Out.WriteLineAsync($"Board written to: {Path.GetFullPath(path)}");
         }
     }
 }
