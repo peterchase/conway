@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ConwayWebApi.Database
 {
+    [Table("BoardCells")]
     public class BoardCell
     {
         public int ID {get; set; }
