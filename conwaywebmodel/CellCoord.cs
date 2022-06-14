@@ -1,6 +1,6 @@
 using System;
 
-namespace ConwayWebApi.Models
+namespace ConwayWebModel
 {
     public class CellCoord : IEquatable<CellCoord>
     {

@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ConwayWebApi.Models;
 using ConwayWebApi.Database;
 using Microsoft.EntityFrameworkCore;
+using ConwayWebModel;
 
 namespace ConwayWebApi.Controllers
 {
@@ -28,7 +28,7 @@ namespace ConwayWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BoardInfo>>> ListBoards()
         {
-            return await _context.Boards.Select(b => new BoardInfo(b, b.ID)).ToListAsync();
+            return await _context.Boards.Select(b => b.ToBoardInfo()).ToListAsync();
         }
 
         // Get the contents of a board with a particular ID
@@ -41,7 +41,7 @@ namespace ConwayWebApi.Controllers
                 return NotFound();
             }
 
-            return new BoardDetail(board, id);
+            return board.ToBoardDetail();
         }
 
         // Put a new board
