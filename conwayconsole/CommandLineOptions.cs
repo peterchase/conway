@@ -32,7 +32,7 @@ namespace ConwayConsole
         public int? WindowY {get; set;} = null;
 
         [Option("webUrl", Required = false, HelpText = "Url of the web service to access database with.")]
-        public string WebURL {get; set;} = @"http:\\localhost:5000\";
+        public string WebURL {get; set;} = "http://localhost:5000/";
 
         public int BoardWidth => Width ?? Console.WindowWidth - 1;
 
