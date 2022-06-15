@@ -10,9 +10,9 @@ using static System.Math;
 using System.Net.Http.Json;
 using System.Collections.Generic;
 
-namespace ConwayConsole
+namespace ConwayWebClient
 {
-    public static class ConwayWebClient
+    public static class ConwayClient
     {
         static HttpClient mClient = new HttpClient();
         const string ROOT = "Board/";
@@ -28,7 +28,7 @@ namespace ConwayConsole
             }
             return boards;
         }
-        public static async Task<BoardDetail> GetBoardDetailAsync(int id)
+        public static async Task<GameState> GetGameStateAsync(int id)
         {
             BoardDetail state = null;
             HttpResponseMessage response = await mClient.GetAsync(ROOT + id.ToString());
@@ -36,7 +36,7 @@ namespace ConwayConsole
             {
                 state = await response.Content.ReadAsAsync<BoardDetail>();
             }
-            return state;
+            return state.ToGameState();
         }
 
         static async Task<Uri> CreateProductAsync(BoardDetail detail)

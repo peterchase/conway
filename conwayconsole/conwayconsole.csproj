@@ -3,11 +3,11 @@
   <ItemGroup>
     <ProjectReference Include="..\conwaylib\conwaylib.csproj" />
     <ProjectReference Include="..\conwaywebmodel\conwaywebmodel.csproj" />
+    <ProjectReference Include="..\conwaywebclient\conwaywebclient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
   </ItemGroup>
 
   <PropertyGroup>

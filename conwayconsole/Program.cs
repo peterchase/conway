@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ConwayLib;
 using CommandLine;
 using System.IO;
+using ConwayWebClient;
 
 namespace ConwayConsole
 {
@@ -17,7 +18,7 @@ namespace ConwayConsole
         public static async Task Main(params string[] args)
         {
             CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
-            ConwayWebClient.SetupClient();
+            ConwayClient.SetupClient();
 
             if (options == null)
                 return;
@@ -71,8 +72,9 @@ namespace ConwayConsole
                     }
                     else if (options.LoadID.HasValue)
                     {
-                      var detail = await ConwayWebClient.GetBoardDetailAsync((int)options.LoadID);
-                      initialBoard = null;
+                        initialBoard = new Board(await ConwayClient.GetGameStateAsync(options.LoadID.Value));
+                        var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
+                        window.Intersect(fileWindow);
                     }
                     else
                     {
