@@ -65,7 +65,7 @@ namespace ConwayConsole
                     }
                     else if (options.LoadID.HasValue)
                     {
-                        initialBoard = new Board(await ConwayClient.GetGameStateAsync(options.LoadID.Value));
+                        initialBoard = new Board((await ConwayClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
                         var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
                         window.Intersect(fileWindow);
                     }

@@ -28,12 +28,12 @@ namespace ConwayWebClient
             }
             return boards;
         }
-        public static async Task<GameState> GetGameStateAsync(int id)
+        public static async Task<BoardDetail> GetBoardDetailAsync(int id)
         {
-            return await GetGameStateAsync(ROOT + id.ToString());
+            return await GetBoardDetailAsync(ROOT + id.ToString());
         }
         
-        public static async Task<GameState> GetGameStateAsync(string url)
+        public static async Task<BoardDetail> GetBoardDetailAsync(string url)
         {
             BoardDetail state = null;
             HttpResponseMessage response = await mClient.GetAsync(url);
@@ -41,7 +41,7 @@ namespace ConwayWebClient
             {
                 state = await response.Content.ReadAsAsync<BoardDetail>();
             }
-            return state.ToGameState();
+            return state;
         }
 
         public static async Task<Uri> CreatBoardAsync(BoardDetail detail)
