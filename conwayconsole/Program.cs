@@ -179,8 +179,8 @@ namespace ConwayConsole
         {
             var boardDetail = board.ToBoardDetail($"{DateTime.UtcNow}");
         
-            await mClient.CreateBoardAsync(boardDetail);
-            await Console.Out.WriteLineAsync("");
+            var location = await mClient.CreateBoardAsync(boardDetail);
+            await Console.Out.WriteLineAsync($"location {location}");
         }
 
         private static async Task SaveToFile(IReadableBoard board)
