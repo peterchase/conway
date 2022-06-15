@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ConwayLib;
 using CommandLine;
 using System.IO;
+using ConwayWebClient;
 
 namespace ConwayConsole
 {
@@ -14,24 +15,19 @@ namespace ConwayConsole
     /// </summary>
     public static class Program
     {
+        static ConwayClient mClient;
         public static async Task Main(params string[] args)
         {
             CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
+            mClient = new ConwayClient(options.WebURL);
 
             if (options == null)
                 return;
-            Func<IReadableBoard, int, int, int> getValueForColour;
-            switch (options.ColourBy)
+            Func<IReadableBoard, int, int, int> getValueForColour = options.ColourBy switch
             {
-                case ColourByType.Age:
-                    getValueForColour = (b, x, y) => b.CellAge(x, y).Value;
-                    break;
-                case ColourByType.Neighbours:
-                default:
-                    getValueForColour = (b, x, y) => b.Neighbours(x, y);
-                    break;
-            }
-
+                ColourByType.Age => (b, x, y) => b.CellAge(x, y).Value,
+                _ => (b, x, y) => b.Neighbours(x, y),
+            };
             using (var cts = new CancellationTokenSource())
             {
 
@@ -50,6 +46,7 @@ namespace ConwayConsole
                         return;
                     }
 
+                    // Load options
                     Board initialBoard;
                     if (options.FilePath != null)
                     {
@@ -66,6 +63,12 @@ namespace ConwayConsole
                             Console.WriteLine("Could not read from file");
                             return;
                         }
+                    }
+                    else if (options.LoadID.HasValue)
+                    {
+                        initialBoard = new Board((await mClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
+                        var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
+                        window.Intersect(fileWindow);
                     }
                     else
                     {
