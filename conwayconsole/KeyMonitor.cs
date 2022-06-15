@@ -10,6 +10,8 @@ namespace ConwayConsole
 
         public static event EventHandler<EventArgs> Save;
 
+        public static event EventHandler<EventArgs> Database;
+
         public static void Start()
         {
             new Thread(Monitor) { IsBackground = true }.Start();
@@ -40,9 +42,11 @@ namespace ConwayConsole
                     
                     case ConsoleKey.S:
                         Save?.Invoke(null, new EventArgs());
-
                         break;
                         
+                    case ConsoleKey.D:
+                        Database?.Invoke(null, new EventArgs());
+                        break;
                     default:
                         break;
                 }

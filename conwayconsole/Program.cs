@@ -38,6 +38,7 @@ namespace ConwayConsole
                 }
 
                 IReadableBoard boardToSave = null;
+                bool saveToDatabase = false;
                 try
                 {
                     if (!options.TryGetWindow(out Rectangle window))
@@ -87,8 +88,9 @@ namespace ConwayConsole
 
                     };
 
-                    bool save = false;
-                    KeyMonitor.Save += (_, args) => save = true;
+                    (bool save, bool database) save = (false, false);
+                    KeyMonitor.Save += (_, _) => save = (true, false);
+                    KeyMonitor.Database += (_, _) => save = (true, true);
 
                     var game = new Game(initialBoard, StandardEvolution.Instance);
                     var builder = new StringBuilder();
@@ -124,9 +126,10 @@ namespace ConwayConsole
                             }
                         }
 
-                        if (save)
+                        if (save.save)
                         {
                             boardToSave = board;
+                            saveToDatabase = save.database;
                             break;
                         }
                     }
@@ -146,7 +149,7 @@ namespace ConwayConsole
 
                 if (boardToSave != null)
                 {
-                    await Save(boardToSave);
+                    await Save(boardToSave, saveToDatabase);
                 }
 
                 void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
@@ -160,9 +163,29 @@ namespace ConwayConsole
             return response == "y" || response == "yes";
         }
 
-        private static async Task Save(IReadableBoard boardToSave)
+        private static async Task Save(IReadableBoard board, bool saveToDatabase)
         {
-            await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
+            if (saveToDatabase)
+            {
+              await SaveToDatabase(board);
+            }
+            else
+            {
+              await SaveToFile(board);
+            }
+        }
+
+        private static async Task SaveToDatabase(IReadableBoard board)
+        {
+            var boardDetail = board.ToBoardDetail($"{DateTime.UtcNow}");
+        
+            var location = await mClient.CreateBoardAsync(boardDetail);
+            await Console.Out.WriteLineAsync($"location {location}");
+        }
+
+        private static async Task SaveToFile(IReadableBoard board)
+        {
+          await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
             string path = await Console.In.ReadLineAsync();
 
             if (string.IsNullOrWhiteSpace(path))
@@ -194,7 +217,7 @@ namespace ConwayConsole
                 }
             }
 
-            await GameStateSerializer.SerializeJson(boardToSave.GetCurrentState(DensityOption.Sparse), path);
+            await GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path);
             await Console.Out.WriteLineAsync($"Board written to: {Path.GetFullPath(path)}");
         }
     }
