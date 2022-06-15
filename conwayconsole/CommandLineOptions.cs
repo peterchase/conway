@@ -31,6 +31,9 @@ namespace ConwayConsole
         [Option("windowY", Required = false, HelpText = "Starting y position of the display")]
         public int? WindowY {get; set;} = null;
 
+        [Option("webUrl", Required = false, HelpText = "Url of the web service to access database with.")]
+        public string WebURL {get; set;} = null;
+
         public int BoardWidth => Width ?? Console.WindowWidth - 1;
 
         public int BoardHeight => Height ?? Console.WindowHeight - 2;

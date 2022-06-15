@@ -18,22 +18,15 @@ namespace ConwayConsole
         public static async Task Main(params string[] args)
         {
             CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
-            ConwayClient.SetupClient();
+            ConwayClient.SetupClient("http://localhost:5000/");
 
             if (options == null)
                 return;
-            Func<IReadableBoard, int, int, int> getValueForColour;
-            switch (options.ColourBy)
+            Func<IReadableBoard, int, int, int> getValueForColour = options.ColourBy switch
             {
-                case ColourByType.Age:
-                    getValueForColour = (b, x, y) => b.CellAge(x, y).Value;
-                    break;
-                case ColourByType.Neighbours:
-                default:
-                    getValueForColour = (b, x, y) => b.Neighbours(x, y);
-                    break;
-            }
-
+                ColourByType.Age => (b, x, y) => b.CellAge(x, y).Value,
+                _ => (b, x, y) => b.Neighbours(x, y),
+            };
             using (var cts = new CancellationTokenSource())
             {
 

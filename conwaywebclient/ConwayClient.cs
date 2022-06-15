@@ -16,7 +16,7 @@ namespace ConwayWebClient
     {
         static HttpClient mClient = new HttpClient();
         const string ROOT = "Board/";
-        const string BASE_ADDRESS = "http://localhost:5000/";
+        static string mBaseAddress;
         
         public static async Task<IEnumerable<BoardInfo>> GetBoardsAsync()
         {
@@ -54,10 +54,11 @@ namespace ConwayWebClient
             return response.StatusCode;
         }
 
-        public static void SetupClient()
+        public static void SetupClient(string baseAddress)
         {
             // Update port # in the following line.
-            mClient.BaseAddress = new Uri(BASE_ADDRESS);
+            mBaseAddress = baseAddress;
+            mClient.BaseAddress = new Uri(mBaseAddress);
             mClient.DefaultRequestHeaders.Accept.Clear();
             mClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }        
