@@ -16,7 +16,7 @@ namespace ConwayConsole
     {
         static HttpClient mClient = new HttpClient();
         const string ROOT = "Board/";
-        const string BASE_ADDRESS = "https://localhost:5001/";
+        const string BASE_ADDRESS = "http://localhost:5000/";
         
         public static async Task<IEnumerable<BoardInfo>> GetBoardsAsync()
         {
@@ -34,7 +34,7 @@ namespace ConwayConsole
             HttpResponseMessage response = await mClient.GetAsync(ROOT + id.ToString());
             if (response.IsSuccessStatusCode)
             {
-                state = await JsonSerializer.DeserializeAsync<BoardDetail>(await response.Content.ReadAsStreamAsync());
+                state = await response.Content.ReadAsAsync<BoardDetail>();
             }
             return state;
         }

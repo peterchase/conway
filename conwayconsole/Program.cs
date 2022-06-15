@@ -17,6 +17,7 @@ namespace ConwayConsole
         public static async Task Main(params string[] args)
         {
             CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
+            ConwayWebClient.SetupClient();
 
             if (options == null)
                 return;
@@ -50,6 +51,7 @@ namespace ConwayConsole
                         return;
                     }
 
+                    // Load options
                     Board initialBoard;
                     if (options.FilePath != null)
                     {
@@ -66,6 +68,11 @@ namespace ConwayConsole
                             Console.WriteLine("Could not read from file");
                             return;
                         }
+                    }
+                    else if (options.LoadID.HasValue)
+                    {
+                      var detail = await ConwayWebClient.GetBoardDetailAsync((int)options.LoadID);
+                      initialBoard = null;
                     }
                     else
                     {

@@ -60,8 +60,11 @@ namespace ConwayConsole
         [Option("colourBy", Required = false, HelpText = "How to colour the cells")]
         public ColourByType ColourBy {get; set;} = ColourByType.Age;        
 
-        [Option('f',"file", Required = false, HelpText = "Load the game's initial state from a file")]
+        [Option('f',"file", Required = false, HelpText = "Load the game's initial state from a json file.")]
         public string FilePath {get; set;} = null;
+
+        [Option('l',"load", Required = false, HelpText = "Load the game's initial state the database via webservice. Requires the board's ID.")]
+        public int? LoadID {get; set;} = null;
 
         [Option('i',"hideDisplay", Required = false, HelpText = "Option not to render the simulation. Does not delay between frames either.")]
         public bool HideDisplay {get; set;} = false;
