@@ -8,12 +8,20 @@ namespace ConwayMultiSim
         public class Simulation
         {
             public bool Finished {get; private set; } = false;
-            private Game mGame;
-            public int Evolution {get {return mGame.Generation;}}
+            public int Generation {get {return mGame.Generation;}}
+            private readonly Game mGame;
 
-            public Simulation(int seed, int width, int height, double density, IEvolution evolution)
+            public Simulation(int width, int height, double density, IEvolution evolution, int? seed = null)
             {
-                var initialBoard = new Board(width, height).Randomise(new Random(seed), density);
+                IReadableBoard initialBoard;
+                if (!seed.HasValue)
+                {
+                    initialBoard = new Board(width, height).Randomise(density);
+                }
+                else
+                {
+                    initialBoard = new Board(width, height).Randomise(new Random(seed.Value), density);
+                }
                 mGame = new Game(initialBoard, evolution);
             }
             public Simulation(GameState state, IEvolution evolution)
