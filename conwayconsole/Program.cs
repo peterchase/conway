@@ -180,6 +180,7 @@ namespace ConwayConsole
             var boardDetail = board.ToBoardDetail($"{DateTime.UtcNow}");
         
             await mClient.CreateBoardAsync(boardDetail);
+            await Console.Out.WriteLineAsync("");
         }
 
         private static async Task SaveToFile(IReadableBoard board)
