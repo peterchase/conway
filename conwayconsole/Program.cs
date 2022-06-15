@@ -20,15 +20,16 @@ namespace ConwayConsole
         {
             CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
             mClient = new ConwayClient(options.WebURL);
-
             if (options == null)
                 return;
 
+            // Colour function for coloring cells
             Func<IReadableBoard, int, int, int> getValueForColour = options.ColourBy switch
             {
                 ColourByType.Age => (b, x, y) => b.CellAge(x, y).Value,
                 _ => (b, x, y) => b.Neighbours(x, y),
             };
+            
             using (var cts = new CancellationTokenSource())
             {
 
@@ -41,13 +42,13 @@ namespace ConwayConsole
                 IReadableBoard boardToSave = null;
                 try
                 {
+
+                    // Game Loading
                     if (!options.TryGetWindow(out Rectangle window))
                     {
                         await Console.Error.WriteLineAsync("Bad window specification");
                         return;
                     }
-
-                    // Loading
                     var loadResult = await Load(options, window);
                     Board initialBoard = loadResult.Item1;
                     window = loadResult.Item2;
@@ -67,14 +68,14 @@ namespace ConwayConsole
                     var game = new Game(initialBoard, StandardEvolution.Instance);
                     var builder = new StringBuilder();
 
-                    // setup console
+                    // Setup console
                     if (!options.HideDisplay)
                     {
                         Console.Clear();
                         Console.CursorVisible = false;
                     }
 
-                    // run simulation
+                    // Run simulation
                     bool stop = false;
                     DateTime lastLoopTime = DateTime.UtcNow;
                     for (IReadableBoard board = initialBoard;
@@ -83,6 +84,7 @@ namespace ConwayConsole
                     {
                         if (!options.HideDisplay)
                         {
+                            // Render
                             await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder, getValueForColour));
                             await Console.Out.WriteLineAsync($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
 
@@ -113,6 +115,7 @@ namespace ConwayConsole
                 }
                 finally
                 {
+                    // Reset Console
                     if (!options.HideDisplay)
                     {
                         Console.CursorVisible = true;
