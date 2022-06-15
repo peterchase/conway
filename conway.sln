@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaywebclient", "conwaywe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaywebclienttests", "conwaywebclienttests\conwaywebclienttests.csproj", "{B5BC744A-08C4-4E4C-9FE4-A5C04BEDA202}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaymultisim", "conwaymultisim\conwaymultisim.csproj", "{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,18 @@ Global
 		{B5BC744A-08C4-4E4C-9FE4-A5C04BEDA202}.Release|x64.Build.0 = Release|Any CPU
 		{B5BC744A-08C4-4E4C-9FE4-A5C04BEDA202}.Release|x86.ActiveCfg = Release|Any CPU
 		{B5BC744A-08C4-4E4C-9FE4-A5C04BEDA202}.Release|x86.Build.0 = Release|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Debug|x64.Build.0 = Debug|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Debug|x86.Build.0 = Debug|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Release|x64.ActiveCfg = Release|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Release|x64.Build.0 = Release|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Release|x86.ActiveCfg = Release|Any CPU
+		{56AC53B9-0B15-4E0B-9D52-5272FD3AD463}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
