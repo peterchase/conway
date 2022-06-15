@@ -30,8 +30,13 @@ namespace ConwayWebClient
         }
         public static async Task<GameState> GetGameStateAsync(int id)
         {
+            return await GetGameStateAsync(ROOT + id.ToString());
+        }
+        
+        public static async Task<GameState> GetGameStateAsync(string url)
+        {
             BoardDetail state = null;
-            HttpResponseMessage response = await mClient.GetAsync(ROOT + id.ToString());
+            HttpResponseMessage response = await mClient.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
                 state = await response.Content.ReadAsAsync<BoardDetail>();
@@ -39,7 +44,7 @@ namespace ConwayWebClient
             return state.ToGameState();
         }
 
-        static async Task<Uri> CreateProductAsync(BoardDetail detail)
+        public static async Task<Uri> CreatBoardAsync(BoardDetail detail)
         {
             HttpResponseMessage response = await mClient.PostAsJsonAsync(ROOT,detail);
             response.EnsureSuccessStatusCode();
@@ -48,7 +53,7 @@ namespace ConwayWebClient
             return response.Headers.Location;
         }
 
-        static async Task<HttpStatusCode> DeleteProductAsync(int id)
+        public static async Task<HttpStatusCode> DeleteBoardAsync(int id)
         {
             HttpResponseMessage response = await mClient.DeleteAsync(ROOT+id.ToString());
             return response.StatusCode;
