@@ -8,6 +8,7 @@ using System.Linq;
 namespace ConwayWebClientTests
 {
     [TestFixture]
+    [Explicit]
     public class WebClientTests
     {
 
