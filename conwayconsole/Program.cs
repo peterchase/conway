@@ -19,10 +19,10 @@ namespace ConwayConsole
         public static async Task Main(params string[] args)
         {
             CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
-            mClient = new ConwayClient(options.WebURL);
-
             if (options == null)
                 return;
+            mClient = new ConwayClient(options.WebURL);
+
             Func<IReadableBoard, int, int, int> getValueForColour = options.ColourBy switch
             {
                 ColourByType.Age => (b, x, y) => b.CellAge(x, y).Value,
