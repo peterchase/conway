@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 using ConwayLib;
 using ConwayWebModel;
 using System.Text.Json;
-using static System.Math;
 using System.Net.Http.Json;
 using System.Collections.Generic;
 
 namespace ConwayWebClient
 {
-    public static class ConwayClient
+    public class ConwayClient
     {
-        static HttpClient mClient = new HttpClient();
+        HttpClient mClient = new HttpClient();
         const string ROOT = "Board/";
-        static string mBaseAddress;
+        string mBaseAddress;
         
-        public static async Task<IEnumerable<BoardInfo>> GetBoardsAsync()
+        public async Task<IEnumerable<BoardInfo>> GetBoardsAsync()
         {
             IEnumerable<BoardInfo> boards = null;
             HttpResponseMessage response = await mClient.GetAsync(ROOT);
@@ -28,23 +27,24 @@ namespace ConwayWebClient
             }
             return boards;
         }
-        public static async Task<BoardDetail> GetBoardDetailAsync(int id)
+        public async Task<BoardDetail> GetBoardDetailAsync(int id)
         {
-            return await GetBoardDetailAsync(ROOT + id.ToString());
+            return await GetBoardDetailAsync($"{ROOT}{id}");
         }
         
-        public static async Task<BoardDetail> GetBoardDetailAsync(string url)
+        public async Task<BoardDetail> GetBoardDetailAsync(string url)
         {
             BoardDetail state = null;
             HttpResponseMessage response = await mClient.GetAsync(url);
-            if (response.IsSuccessStatusCode)
-            {
-                state = await response.Content.ReadAsAsync<BoardDetail>();
-            }
+
+            response.EnsureSuccessStatusCode();
+            state = await response.Content.ReadAsAsync<BoardDetail>();
+
+            if (state == null) {throw new Exception("Could not deserialize Board Json.");}
             return state;
         }
 
-        public static async Task<Uri> CreatBoardAsync(BoardDetail detail)
+        public async Task<Uri> CreatBoardAsync(BoardDetail detail)
         {
             HttpResponseMessage response = await mClient.PostAsJsonAsync(ROOT,detail);
             response.EnsureSuccessStatusCode();
@@ -53,13 +53,13 @@ namespace ConwayWebClient
             return response.Headers.Location;
         }
 
-        public static async Task<HttpStatusCode> DeleteBoardAsync(int id)
+        public async Task<HttpStatusCode> DeleteBoardAsync(int id)
         {
             HttpResponseMessage response = await mClient.DeleteAsync(ROOT+id.ToString());
             return response.StatusCode;
         }
 
-        public static void SetupClient(string baseAddress)
+        public ConwayClient(string baseAddress)
         {
             // Update port # in the following line.
             mBaseAddress = baseAddress;

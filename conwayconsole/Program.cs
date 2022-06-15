@@ -15,10 +15,11 @@ namespace ConwayConsole
     /// </summary>
     public static class Program
     {
+        static ConwayClient mClient;
         public static async Task Main(params string[] args)
         {
             CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
-            ConwayClient.SetupClient("http://localhost:5000/");
+            mClient = new ConwayClient(options.WebURL);
 
             if (options == null)
                 return;
@@ -65,7 +66,7 @@ namespace ConwayConsole
                     }
                     else if (options.LoadID.HasValue)
                     {
-                        initialBoard = new Board((await ConwayClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
+                        initialBoard = new Board((await mClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
                         var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
                         window.Intersect(fileWindow);
                     }
