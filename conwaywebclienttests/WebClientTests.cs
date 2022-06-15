@@ -53,7 +53,7 @@ namespace ConwayWebClientTests
             for (int i = 0; i < 4; i++) { game.Turn(out _); }
             IReadableBoard currentBoard = game.Turn(out _);
 
-            var createResponse = await mClient.CreatBoardAsync(currentBoard.ToBoardDetail("Test board"));
+            var createResponse = await mClient.CreateBoardAsync(currentBoard.ToBoardDetail("Test board"));
 
             var boardDetailFromDatabse = await mClient.GetBoardDetailAsync(createResponse.AbsolutePath);
 

@@ -44,7 +44,7 @@ namespace ConwayWebClient
             return state;
         }
 
-        public async Task<Uri> CreatBoardAsync(BoardDetail detail)
+        public async Task<Uri> CreateBoardAsync(BoardDetail detail)
         {
             HttpResponseMessage response = await mClient.PostAsJsonAsync(ROOT,detail);
             response.EnsureSuccessStatusCode();

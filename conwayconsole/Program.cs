@@ -163,24 +163,26 @@ namespace ConwayConsole
             return response == "y" || response == "yes";
         }
 
-        private static async Task Save(IReadableBoard boardToSave, bool saveToDatabase)
+        private static async Task Save(IReadableBoard board, bool saveToDatabase)
         {
             if (saveToDatabase)
             {
-              await SaveToDatabase(boardToSave);
+              await SaveToDatabase(board);
             }
             else
             {
-              await SaveToFile(boardToSave);
+              await SaveToFile(board);
             }
         }
 
-        private static async Task SaveToDatabase(IReadableBoard boardToSave)
+        private static async Task SaveToDatabase(IReadableBoard board)
         {
-            throw new NotImplementedException();
+            var boardDetail = board.ToBoardDetail($"{DateTime.UtcNow}");
+        
+            await mClient.CreateBoardAsync(boardDetail);
         }
 
-        private static async Task SaveToFile(IReadableBoard boardToSave)
+        private static async Task SaveToFile(IReadableBoard board)
         {
           await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
             string path = await Console.In.ReadLineAsync();
@@ -214,7 +216,7 @@ namespace ConwayConsole
                 }
             }
 
-            await GameStateSerializer.SerializeJson(boardToSave.GetCurrentState(DensityOption.Sparse), path);
+            await GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path);
             await Console.Out.WriteLineAsync($"Board written to: {Path.GetFullPath(path)}");
         }
     }
