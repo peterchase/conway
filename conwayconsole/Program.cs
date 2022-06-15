@@ -23,6 +23,7 @@ namespace ConwayConsole
 
             if (options == null)
                 return;
+
             Func<IReadableBoard, int, int, int> getValueForColour = options.ColourBy switch
             {
                 ColourByType.Age => (b, x, y) => b.CellAge(x, y).Value,
@@ -46,39 +47,13 @@ namespace ConwayConsole
                         return;
                     }
 
-                    // Load options
-                    Board initialBoard;
-                    if (options.FilePath != null)
-                    {
-                        //Create board from a file
-                        try
-                        {
-                            var gameState = await GameStateSerializer.DeserializeJson(options.FilePath);
-                            initialBoard = new Board(gameState);
-                            var fileWindow = new Rectangle(0, 0, gameState.Width, gameState.Height);
-                            window.Intersect(fileWindow);
-                        }
-                        catch (IOException)
-                        {
-                            Console.WriteLine("Could not read from file");
-                            return;
-                        }
-                    }
-                    else if (options.LoadID.HasValue)
-                    {
-                        initialBoard = new Board((await mClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
-                        var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
-                        window.Intersect(fileWindow);
-                    }
-                    else
-                    {
-                        // create board based on settings
-                        var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
-                        double density = 1 - Math.Clamp(options.Density, 0, 1);
-                        initialBoard = new Board(options.BoardWidth, options.BoardHeight);
-                        initialBoard.Randomise(random, density);
-                    }
+                    // Loading
+                    var loadResult = await Load(options, window);
+                    Board initialBoard = loadResult.Item1;
+                    window = loadResult.Item2;
 
+                    //Keypress event handling
+                    bool save = false;
                     KeyMonitor.Movement += (_, args) =>
                     {
 
@@ -86,19 +61,20 @@ namespace ConwayConsole
                         window.Y = Math.Min(Math.Max(0, args.Vertical + window.Y), initialBoard.Height - window.Height);
 
                     };
-
-                    bool save = false;
                     KeyMonitor.Save += (_, args) => save = true;
 
+                    // create game
                     var game = new Game(initialBoard, StandardEvolution.Instance);
                     var builder = new StringBuilder();
 
+                    // setup console
                     if (!options.HideDisplay)
                     {
                         Console.Clear();
                         Console.CursorVisible = false;
                     }
 
+                    // run simulation
                     bool stop = false;
                     DateTime lastLoopTime = DateTime.UtcNow;
                     for (IReadableBoard board = initialBoard;
@@ -108,11 +84,12 @@ namespace ConwayConsole
                         if (!options.HideDisplay)
                         {
                             await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder, getValueForColour));
+                            await Console.Out.WriteLineAsync($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
+
+                            // Make sure delay between boards is equal to the delay specified in cmd if possible
                             DateTime now = DateTime.UtcNow;
                             TimeSpan elapsed = now.Subtract(lastLoopTime);
                             TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
-
-                            await Console.Out.WriteLineAsync($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
                             if (delay > TimeSpan.Zero)
                             {
                                 if (delay > TimeSpan.Zero)
@@ -158,6 +135,44 @@ namespace ConwayConsole
             await Console.Out.WriteAsync(prompt);
             string response = (await Console.In.ReadLineAsync()).ToLower();
             return response == "y" || response == "yes";
+        }
+
+
+        private static async Task<(Board, Rectangle)> Load(CommandLineOptions options, Rectangle window)
+        {
+            Board initialBoard;
+            if (options.FilePath != null)
+            {
+                //Create board from a file
+                try
+                {
+                    var gameState = await GameStateSerializer.DeserializeJson(options.FilePath);
+                    initialBoard = new Board(gameState);
+                    var fileWindow = new Rectangle(0, 0, gameState.Width, gameState.Height);
+                    window.Intersect(fileWindow);
+                }
+                catch (IOException)
+                {
+                    Console.WriteLine("Could not read from file");
+                    return (null, window);
+                }
+            }
+            else if (options.LoadID.HasValue)
+            {
+                // create board from database
+                initialBoard = new Board((await mClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
+                var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
+                window.Intersect(fileWindow);
+            }
+            else
+            {
+                // create board based on settings
+                var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
+                double density = 1 - Math.Clamp(options.Density, 0, 1);
+                initialBoard = new Board(options.BoardWidth, options.BoardHeight);
+                initialBoard.Randomise(random, density);
+            }
+            return (initialBoard, window);
         }
 
         private static async Task Save(IReadableBoard boardToSave)
