@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\conwaylib\conwaylib.csproj" />
+    <ProjectReference Include="..\conwaywebmodel\conwaywebmodel.csproj" />
+    <ProjectReference Include="..\conwaywebclient\conwaywebclient.csproj" />
   </ItemGroup>
 
   <ItemGroup>

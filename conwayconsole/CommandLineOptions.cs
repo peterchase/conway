@@ -31,6 +31,9 @@ namespace ConwayConsole
         [Option("windowY", Required = false, HelpText = "Starting y position of the display")]
         public int? WindowY {get; set;} = null;
 
+        [Option("webUrl", Required = false, HelpText = "Url of the web service to access database with.")]
+        public string WebURL {get; set;} = "http://localhost:5000/";
+
         public int BoardWidth => Width ?? Console.WindowWidth - 1;
 
         public int BoardHeight => Height ?? Console.WindowHeight - 2;
@@ -60,8 +63,11 @@ namespace ConwayConsole
         [Option("colourBy", Required = false, HelpText = "How to colour the cells")]
         public ColourByType ColourBy {get; set;} = ColourByType.Age;        
 
-        [Option('f',"file", Required = false, HelpText = "Load the game's initial state from a file")]
+        [Option('f',"file", Required = false, HelpText = "Load the game's initial state from a json file.")]
         public string FilePath {get; set;} = null;
+
+        [Option('l',"load", Required = false, HelpText = "Load the game's initial state the database via webservice. Requires the board's ID.")]
+        public int? LoadID {get; set;} = null;
 
         [Option('i',"hideDisplay", Required = false, HelpText = "Option not to render the simulation. Does not delay between frames either.")]
         public bool HideDisplay {get; set;} = false;
