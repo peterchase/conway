@@ -40,8 +40,14 @@ namespace ConwayWebApi.Controllers
             {
                 return NotFound();
             }
+            var detail = board.ToBoardDetail();
 
-            return board.ToBoardDetail();
+            if (TeapotChecker.IsTeapot(detail))
+            {
+                return StatusCode(418,"TEAPOT!!!");
+            }
+
+            return detail;
         }
 
         // Put a new board
@@ -71,6 +77,13 @@ namespace ConwayWebApi.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+    }
+    public static class TeapotChecker
+    {
+        public static bool IsTeapot(BoardDetail detail)
+        {
+            return detail.Info.Description.ToLower().Contains("teapot");
         }
     }
 }
