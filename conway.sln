@@ -11,16 +11,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "conwaylibtests", "conwaylib
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8152221D-47A9-4F25-98F1-A8DD9FA20505}"
 	ProjectSection(SolutionItems) = preProject
+		.vscode\launch.json = .vscode\launch.json
 		README.md = README.md
+		.vscode\tasks.json = .vscode\tasks.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaywebapi", "conwaywebapi\conwaywebapi.csproj", "{61BF698D-2757-4B60-AD27-FA8212B4188F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "conwaywebapi", "conwaywebapi\conwaywebapi.csproj", "{61BF698D-2757-4B60-AD27-FA8212B4188F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaywebmodel", "conwaywebmodel\conwaywebmodel.csproj", "{89C41C49-B0B7-4BAE-A7B9-284E416E1CE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "conwaywebmodel", "conwaywebmodel\conwaywebmodel.csproj", "{89C41C49-B0B7-4BAE-A7B9-284E416E1CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaywebclient", "conwaywebclient\conwaywebclient.csproj", "{9D2A6069-C63E-44E2-86B8-71E11DC9CC77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "conwaywebclient", "conwaywebclient\conwaywebclient.csproj", "{9D2A6069-C63E-44E2-86B8-71E11DC9CC77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conwaywebclienttests", "conwaywebclienttests\conwaywebclienttests.csproj", "{B5BC744A-08C4-4E4C-9FE4-A5C04BEDA202}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "conwaywebclienttests", "conwaywebclienttests\conwaywebclienttests.csproj", "{B5BC744A-08C4-4E4C-9FE4-A5C04BEDA202}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
