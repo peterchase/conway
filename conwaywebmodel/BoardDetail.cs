@@ -1,19 +1,18 @@
 using System;
 using System.Linq;
 
-namespace ConwayWebModel
+namespace ConwayWebModel;
+
+public sealed class BoardDetail
 {
-    public sealed class BoardDetail
-    {
-        public BoardInfo Info { get; set; }
+  public BoardInfo Info { get; set; }
 
-        public CellCoord[] LiveCells { get; set;}
-        public BoardDetail() {}
+  public CellCoord[] LiveCells { get; set;}
+  public BoardDetail() {}
 
-        public BoardDetail(BoardInfo info, CellCoord[] liveCells)
-        {
-            Info = info;
-            LiveCells = liveCells;
-        }
-    }
+  public BoardDetail(BoardInfo info, CellCoord[] liveCells)
+  {
+    Info = info;
+    LiveCells = liveCells;
+  }
 }
