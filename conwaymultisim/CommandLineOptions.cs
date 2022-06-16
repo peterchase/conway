@@ -20,10 +20,12 @@ namespace ConwayMultiSim
         public int Number {get; set;}
 
         [Option('g',"maxGenerations", Required = false, HelpText = "Maximimum number of generations performed before the simulation ends.")]
-        public int MaxGenerations {get; set;} = int.MaxValue;
-        
+        public int MaxGenerations {get; set;} = int.MaxValue;        
 
         [Option('s',"startSeed", Required = false, HelpText = "Starting seed the games generate from.")]
         public int StartSeed {get; set;} = 0;
+
+        [Option('i',"hideUI", Required = false, HelpText = "Hide UI (Silent mode).")]
+        public bool HideUI {get; set;} = false;
     }
 }

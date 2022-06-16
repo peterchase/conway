@@ -48,20 +48,26 @@ public class Program
                     finished = sim.Turn();
                 }
                 Interlocked.Increment(ref mSimsCompleted);
-                SimulationComplete?.Invoke(null, EventArgs.Empty);
+                if (!options.HideUI)
+                {
+                    SimulationComplete?.Invoke(null, EventArgs.Empty);
+                }
             });
             var time = sw.Elapsed;
 
-            await Console.Out.WriteLineAsync($"\r{simulations.Count} simulations completed in {Math.Round(time.TotalMilliseconds)}ms.");
-
-            await Console.Out.WriteLineAsync($"\nTop {Math.Min(5, mSimsExpected)}:");
-            var longest5 = simulations.OrderByDescending(x => x.Generation).Take(5);
-            await Console.Out.WriteLineAsync($"{"Seed",-8}  {"Gens",-8}");
-            await Console.Out.WriteLineAsync($"--------  --------");
-
-            foreach (var sim in longest5)
+            if (!options.HideUI)
             {
-                await Console.Out.WriteLineAsync($"{sim.Seed,-8}  {sim.Generation,8}");
+                await Console.Out.WriteLineAsync($"\r{simulations.Count} simulations completed in {Math.Round(time.TotalMilliseconds)}ms.");
+
+                await Console.Out.WriteLineAsync($"\nTop {Math.Min(5, mSimsExpected)}:");
+                var longest5 = simulations.OrderByDescending(x => x.Generation).Take(5);
+                await Console.Out.WriteLineAsync($"{"Seed",-8}  {"Gens",-8}");
+                await Console.Out.WriteLineAsync($"--------  --------");
+
+                foreach (var sim in longest5)
+                {
+                    await Console.Out.WriteLineAsync($"{sim.Seed,-8}  {sim.Generation,8}");
+                }
             }
         }
         finally
