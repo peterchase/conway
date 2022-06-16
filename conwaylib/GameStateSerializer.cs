@@ -22,7 +22,7 @@ public static class GameStateSerializer
   public static async Task SerializeJson(GameState state, Stream stream)
   {
     await JsonSerializer.SerializeAsync(stream, state);
-    stream.Flush();
+    await stream.FlushAsync();
   }
 
   public static async Task SerializeJson(GameState state, string filePath)

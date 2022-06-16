@@ -17,8 +17,8 @@ public class CellCoord : IEquatable<CellCoord>
     return other != null && X==other.X && Y == other.Y;
   }
 
-  public static bool operator ==(CellCoord a, CellCoord b) => a.Equals(b);
-  public static bool operator !=(CellCoord a, CellCoord b) => !a.Equals(b);
+  public static bool operator ==(CellCoord a, CellCoord b) => !ReferenceEquals(a, null) && a.Equals(b);
+  public static bool operator !=(CellCoord a, CellCoord b) => !ReferenceEquals(a, null) && !a.Equals(b);
 
   public override string ToString()
   {

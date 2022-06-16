@@ -40,11 +40,11 @@ internal static class KeyMonitor
           break;
                     
         case ConsoleKey.S:
-          Save?.Invoke(null, new EventArgs());
+          Save?.Invoke(null, EventArgs.Empty);
           break;
                         
         case ConsoleKey.D:
-          Database?.Invoke(null, new EventArgs());
+          Database?.Invoke(null, EventArgs.Empty);
           break;
         default:
           break;

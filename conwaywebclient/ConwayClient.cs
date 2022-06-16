@@ -13,10 +13,9 @@ namespace ConwayWebClient;
 
 public class ConwayClient
 {
-  HttpClient mClient = new HttpClient();
-  const string ROOT = "Board/";
-  string mBaseAddress;
-        
+  private readonly HttpClient mClient = new HttpClient();
+  private const string ROOT = "Board/";
+
   public async Task<IEnumerable<BoardInfo>> GetBoardsAsync()
   {
     IEnumerable<BoardInfo> boards = null;
@@ -34,11 +33,10 @@ public class ConwayClient
         
   public async Task<BoardDetail> GetBoardDetailAsync(string url)
   {
-    BoardDetail state = null;
     HttpResponseMessage response = await mClient.GetAsync(url);
 
     response.EnsureSuccessStatusCode();
-    state = await response.Content.ReadAsAsync<BoardDetail>();
+    var state = await response.Content.ReadAsAsync<BoardDetail>();
 
     if (state == null) {throw new Exception("Could not deserialize Board Json.");}
     return state;
@@ -62,8 +60,7 @@ public class ConwayClient
   public ConwayClient(string baseAddress)
   {
     // Update port # in the following line.
-    mBaseAddress = baseAddress;
-    mClient.BaseAddress = new Uri(mBaseAddress);
+    mClient.BaseAddress = new Uri(baseAddress);
     mClient.DefaultRequestHeaders.Accept.Clear();
     mClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
   }        

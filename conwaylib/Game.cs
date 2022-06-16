@@ -10,7 +10,7 @@ namespace ConwayLib;
 /// </summary>
 public sealed class Game
 {
-  private HashSet<byte[]> mHistory;
+  private readonly HashSet<byte[]> mHistory;
 
   private readonly IEvolution mEvolution;
   private IMutableBoard mCurBoard, mNextBoard;
