@@ -3,33 +3,40 @@ using ConwayLib;
 using CommandLine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
-namespace ConwayMultiSim
+namespace ConwayMultiSim;
+
+public class Program
 {
-    partial class Program
+    public static async Task Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
-            if (options == null)
-                return;
-            
-            List<Simulation> simulations = GenerateGames(options).ToList();
-            while(simulations.Any(x => !x.Finished))
-            {                
-                foreach (var sim in simulations)
-                {
-                    sim.Turn();
-                }
-            }
-        }
+        CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
+        if (options == null)
+            return;
+        
+        Stopwatch sw = new Stopwatch();
 
-        static IEnumerable<Simulation> GenerateGames(CommandLineOptions options)
+        IEnumerable<Simulation> simulations = GenerateGames(options);
+        sw.Start();
+        foreach (var sim in simulations)
         {
-            for (int i = 0; i < options.Number; i++)
-            {
-                yield return new Simulation(options.Width, options.Height, options.Density, StandardEvolution.Instance);
-            }         
+            bool finished = false;
+            while (!finished)
+                finished = sim.Turn();
         }
+        var time = sw.Elapsed;
+
+        await Console.Out.WriteLineAsync($"{simulations.Count()} simulations completed in {time.Duration}.");
+        await Console.Out.WriteLineAsync($"Seeds with longest time: {simulations.Count()} simulations completed in {time.Duration}.");
+    }
+
+    static IEnumerable<Simulation> GenerateGames(CommandLineOptions options)
+    {
+        for (int i = 0; i < options.Number; i++)
+        {
+            yield return new Simulation(options.Width, options.Height, options.Density, StandardEvolution.Instance);
+        }         
     }
 }

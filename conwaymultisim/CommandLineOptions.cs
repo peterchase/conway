@@ -14,9 +14,9 @@ namespace ConwayMultiSim
         public int Height {get; set;}
 
         [Option('d', "density", Required = true, HelpText = "Starting density of the simulation")]
-        public int Density {get; set;}
+        public double Density {get; set;}
 
-        [Option('n', "Number", Required = true, HelpText = "The number of different simulations to perform.")]
+        [Option('n', "number", Required = true, HelpText = "The number of different simulations to perform.")]
         public int Number {get; set;}
 
         [Option('g',"maxGenerations", Required = false, HelpText = "Maximimum number of generations performed before the simulation ends.")]
