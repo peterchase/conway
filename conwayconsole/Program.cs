@@ -15,226 +15,227 @@ namespace ConwayConsole;
 /// </summary>
 public static class Program
 {
-  static ConwayClient mClient;
-  public static async Task Main(params string[] args)
-  {
-    CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
-    if (options == null)
-      return;
-    mClient = new ConwayClient(options.WebURL);
-
-    Func<IReadableBoard, int, int, int> getValueForColour = options.ColourBy switch
+    static ConwayClient mClient;
+    public static async Task Main(params string[] args)
     {
-      ColourByType.Age => (b, x, y) => b.CellAge(x, y).Value,
-      _ => (b, x, y) => b.Neighbours(x, y),
-    };
-            
-    using (var cts = new CancellationTokenSource())
-    {
+        CommandLineOptions options = Parser.Default.ParseArguments<CommandLineOptions>(args).Value;
+        if (options == null)
+            return;
+        mClient = new ConwayClient(options.WebURL);
 
-      if (!options.HideDisplay)
-      {
-        Console.CancelKeyPress += HandleCancel;
-        KeyMonitor.Start();
-      }
-
-      IReadableBoard boardToSave = null;
-      bool saveToDatabase = false;
-      try
-      {
-
-        // Game Loading
-        if (!options.TryGetWindow(out Rectangle window))
+        Func<IReadableBoard, int, int, int> getValueForColour = options.ColourBy switch
         {
-          await Console.Error.WriteLineAsync("Bad window specification");
-          return;
-        }
-        var loadResult = await Load(options, window);
-        Board initialBoard = loadResult.Item1;
-        window = loadResult.Item2;
-
-        //Keypress event handling
-        KeyMonitor.Movement += (_, args) =>
-        {
-
-          window.X = Math.Min(Math.Max(0, args.Horizontal + window.X), initialBoard.Width - window.Width);
-          window.Y = Math.Min(Math.Max(0, args.Vertical + window.Y), initialBoard.Height - window.Height);
-
+            ColourByType.Age => (b, x, y) => b.CellAge(x, y).Value,
+            _ => (b, x, y) => b.Neighbours(x, y),
         };
 
-        (bool save, bool database) save = (false, false);
-        KeyMonitor.Save += (_, _) => save = (true, false);
-        KeyMonitor.Database += (_, _) => save = (true, true);
-
-        // create game
-        var game = new Game(initialBoard, StandardEvolution.Instance);
-        var builder = new StringBuilder();
-
-        // Setup console
-        if (!options.HideDisplay)
+        using (var cts = new CancellationTokenSource())
         {
-          Console.Clear();
-          Console.CursorVisible = false;
-        }
 
-        // Run simulation
-        bool stop = false;
-        DateTime lastLoopTime = DateTime.UtcNow;
-        for (IReadableBoard board = initialBoard;
-             !(stop || cts.IsCancellationRequested) && (options.MaxGenerations >= game.Generation);
-             board = game.Turn(out stop))
-        {
-          if (!options.HideDisplay)
-          {
-            // Render
-            await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder, getValueForColour));
-            await Console.Out.WriteLineAsync($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
-
-            // Make sure delay between boards is equal to the delay specified in cmd if possible
-            DateTime now = DateTime.UtcNow;
-            TimeSpan elapsed = now.Subtract(lastLoopTime);
-            TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
-            if (delay > TimeSpan.Zero)
+            if (!options.HideDisplay)
             {
-              if (delay > TimeSpan.Zero)
-              {
-                await Task.Delay(delay, cts.Token);
-              }
-
-              lastLoopTime = DateTime.UtcNow;
+                Console.CancelKeyPress += HandleCancel;
+                KeyMonitor.Start();
             }
-          }
 
-          if (save.save)
-          {
-            boardToSave = board;
-            saveToDatabase = save.database;
-            break;
-          }
+            IReadableBoard boardToSave = null;
+            bool saveToDatabase = false;
+            try
+            {
+
+                // Game Loading
+                if (!options.TryGetWindow(out Rectangle window))
+                {
+                    await Console.Error.WriteLineAsync("Bad window specification");
+                    return;
+                }
+                var loadResult = await Load(options, window);
+                Board initialBoard = loadResult.Item1;
+                window = loadResult.Item2;
+
+                //Keypress event handling
+                KeyMonitor.Movement += (_, args) =>
+                {
+
+                    window.X = Math.Min(Math.Max(0, args.Horizontal + window.X), initialBoard.Width - window.Width);
+                    window.Y = Math.Min(Math.Max(0, args.Vertical + window.Y), initialBoard.Height - window.Height);
+
+                };
+
+                (bool save, bool database) save = (false, false);
+                KeyMonitor.Save += (_, _) => save = (true, false);
+                KeyMonitor.Database += (_, _) => save = (true, true);
+
+                // create game
+                using var game = new Game(initialBoard, StandardEvolution.Instance);
+                
+                var builder = new StringBuilder();
+
+                // Setup console
+                if (!options.HideDisplay)
+                {
+                    Console.Clear();
+                    Console.CursorVisible = false;
+                }
+
+                // Run simulation
+                bool stop = false;
+                DateTime lastLoopTime = DateTime.UtcNow;
+                for (IReadableBoard board = initialBoard;
+                     !(stop || cts.IsCancellationRequested) && (options.MaxGenerations >= game.Generation);
+                     board = game.Turn(out stop))
+                {
+                    if (!options.HideDisplay)
+                    {
+                        // Render
+                        await Console.Out.WriteLineAsync(board.ToConsoleString(window, builder, getValueForColour));
+                        await Console.Out.WriteLineAsync($"{BoardConsoleExtensions.cHome}({board.Width}x{board.Height}) ({window.Width}x{window.Height}) ({window.X}, {window.Y})");
+
+                        // Make sure delay between boards is equal to the delay specified in cmd if possible
+                        DateTime now = DateTime.UtcNow;
+                        TimeSpan elapsed = now.Subtract(lastLoopTime);
+                        TimeSpan delay = TimeSpan.FromMilliseconds(options.Delay).Subtract(elapsed);
+                        if (delay > TimeSpan.Zero)
+                        {
+                            if (delay > TimeSpan.Zero)
+                            {
+                                await Task.Delay(delay, cts.Token);
+                            }
+
+                            lastLoopTime = DateTime.UtcNow;
+                        }
+                    }
+
+                    if (save.save)
+                    {
+                        boardToSave = board;
+                        saveToDatabase = save.database;
+                        break;
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                // Reset Console
+                if (!options.HideDisplay)
+                {
+                    Console.CursorVisible = true;
+                    Console.ResetColor();
+                    Console.CancelKeyPress -= HandleCancel;
+                }
+            }
+
+            if (boardToSave != null)
+            {
+                await Save(boardToSave, saveToDatabase);
+            }
+
+            void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
         }
-      }
-      catch (OperationCanceledException)
-      {
-      }
-      finally
-      {
-        // Reset Console
-        if (!options.HideDisplay)
+    }
+
+    private static async Task<bool> YesNo(string prompt)
+    {
+        await Console.Out.WriteAsync(prompt);
+        string response = (await Console.In.ReadLineAsync()).ToLower();
+        return response == "y" || response == "yes";
+    }
+
+
+    private static async Task<(Board, Rectangle)> Load(CommandLineOptions options, Rectangle window)
+    {
+        Board initialBoard;
+        if (options.FilePath != null)
         {
-          Console.CursorVisible = true;
-          Console.ResetColor();
-          Console.CancelKeyPress -= HandleCancel;
+            //Create board from a file
+            try
+            {
+                var gameState = await GameStateSerializer.DeserializeJson(options.FilePath);
+                initialBoard = new Board(gameState);
+                var fileWindow = new Rectangle(0, 0, gameState.Width, gameState.Height);
+                window.Intersect(fileWindow);
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Could not read from file");
+                return (null, window);
+            }
         }
-      }
-
-      if (boardToSave != null)
-      {
-        await Save(boardToSave, saveToDatabase);
-      }
-
-      void HandleCancel(object sender, ConsoleCancelEventArgs args) => cts.Cancel();
-    }
-  }
-
-  private static async Task<bool> YesNo(string prompt)
-  {
-    await Console.Out.WriteAsync(prompt);
-    string response = (await Console.In.ReadLineAsync()).ToLower();
-    return response == "y" || response == "yes";
-  }
-
-
-  private static async Task<(Board, Rectangle)> Load(CommandLineOptions options, Rectangle window)
-  {
-    Board initialBoard;
-    if (options.FilePath != null)
-    {
-      //Create board from a file
-      try
-      {
-        var gameState = await GameStateSerializer.DeserializeJson(options.FilePath);
-        initialBoard = new Board(gameState);
-        var fileWindow = new Rectangle(0, 0, gameState.Width, gameState.Height);
-        window.Intersect(fileWindow);
-      }
-      catch (IOException)
-      {
-        Console.WriteLine("Could not read from file");
-        return (null, window);
-      }
-    }
-    else if (options.LoadID.HasValue)
-    {
-      // create board from database
-      initialBoard = new Board((await mClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
-      var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
-      window.Intersect(fileWindow);
-    }
-    else
-    {
-      // create board based on settings
-      var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
-      double density = 1 - Math.Clamp(options.Density, 0, 1);
-      initialBoard = new Board(options.BoardWidth, options.BoardHeight);
-      initialBoard.Randomise(random, density);
-    }
-    return (initialBoard, window);
-  }
-  private static async Task Save(IReadableBoard board, bool saveToDatabase)
-  {
-    if (saveToDatabase)
-    {
-      await SaveToDatabase(board);
-    }
-    else
-    {
-      await SaveToFile(board);
-    }
-  }
-
-  private static async Task SaveToDatabase(IReadableBoard board)
-  {
-    var boardDetail = board.ToBoardDetail($"{DateTime.UtcNow}");
-        
-    var location = await mClient.CreateBoardAsync(boardDetail);
-    await Console.Out.WriteLineAsync($"location {location}");
-  }
-
-  private static async Task SaveToFile(IReadableBoard board)
-  {
-    await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
-    string path = await Console.In.ReadLineAsync();
-
-    if (string.IsNullOrWhiteSpace(path))
-    {
-      path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
-    }
-    else
-    {
-      path = Path.ChangeExtension(path, ".json");
-      string dir = Path.GetDirectoryName(path);
-      if (dir != null && !Directory.Exists(dir))
-      {
-        if (await YesNo("Do you want to make a new directory [Y/N]: "))
+        else if (options.LoadID.HasValue)
         {
-          Directory.CreateDirectory(dir);
+            // create board from database
+            initialBoard = new Board((await mClient.GetBoardDetailAsync(options.LoadID.Value)).ToGameState());
+            var fileWindow = new Rectangle(0, 0, initialBoard.Width, initialBoard.Height);
+            window.Intersect(fileWindow);
         }
         else
         {
-          return;
+            // create board based on settings
+            var random = options.Seed.HasValue ? new Random(options.Seed.Value) : new Random();
+            double density = 1 - Math.Clamp(options.Density, 0, 1);
+            initialBoard = new Board(options.BoardWidth, options.BoardHeight);
+            initialBoard.Randomise(random, density);
         }
-      }
+        return (initialBoard, window);
     }
-
-    if (File.Exists(path))
+    private static async Task Save(IReadableBoard board, bool saveToDatabase)
     {
-      if (!await YesNo("An existing file with that name already exists. Do you want to overwrite it [Y/N]: "))
-      {
-        path = Path.Combine(Path.GetDirectoryName(path), $"{Path.GetFileNameWithoutExtension(path)}-{Guid.NewGuid():N}.json");
-      }
+        if (saveToDatabase)
+        {
+            await SaveToDatabase(board);
+        }
+        else
+        {
+            await SaveToFile(board);
+        }
     }
 
-    await GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path);
-    await Console.Out.WriteLineAsync($"Board written to: {Path.GetFullPath(path)}");
-  }
+    private static async Task SaveToDatabase(IReadableBoard board)
+    {
+        var boardDetail = board.ToBoardDetail($"{DateTime.UtcNow}");
+
+        var location = await mClient.CreateBoardAsync(boardDetail);
+        await Console.Out.WriteLineAsync($"location {location}");
+    }
+
+    private static async Task SaveToFile(IReadableBoard board)
+    {
+        await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
+        string path = await Console.In.ReadLineAsync();
+
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
+        }
+        else
+        {
+            path = Path.ChangeExtension(path, ".json");
+            string dir = Path.GetDirectoryName(path);
+            if (dir != null && !Directory.Exists(dir))
+            {
+                if (await YesNo("Do you want to make a new directory [Y/N]: "))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+
+        if (File.Exists(path))
+        {
+            if (!await YesNo("An existing file with that name already exists. Do you want to overwrite it [Y/N]: "))
+            {
+                path = Path.Combine(Path.GetDirectoryName(path), $"{Path.GetFileNameWithoutExtension(path)}-{Guid.NewGuid():N}.json");
+            }
+        }
+
+        await GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path);
+        await Console.Out.WriteLineAsync($"Board written to: {Path.GetFullPath(path)}");
+    }
 }

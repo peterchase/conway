@@ -1,9 +1,11 @@
+using System;
+
 namespace ConwayLib;
 
 /// <summary>
 /// Represents the instantaneous state of a game of Conway's Game of Life on a rectangular grid.
 /// </summary>
-public interface IReadableBoard
+public interface IReadableBoard : IDisposable
 {
   int Width { get; }
 
