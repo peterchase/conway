@@ -44,7 +44,7 @@ public sealed class Board : IMutableBoard, IEnumerable<bool>, IAgeArrayBoard, ID
 
     public byte[] GetUniqueHash()
     {
-        return mHasher.GetUniqueHash(mCells.SelectMany(row => row).Select(i => i.HasValue));
+        return mHasher.GetUniqueHash(mCells.SelectMany(row => row).Select(i => i.HasValue), Width*Height);
     }
     public int Width { get; }
 
