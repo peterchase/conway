@@ -21,5 +21,9 @@ namespace ConwayMultiSim
 
         [Option('g',"maxGenerations", Required = false, HelpText = "Maximimum number of generations performed before the simulation ends.")]
         public int MaxGenerations {get; set;} = int.MaxValue;
+        
+
+        [Option('s',"startSeed", Required = false, HelpText = "Starting seed the games generate from.")]
+        public int StartSeed {get; set;} = 0;
     }
 }

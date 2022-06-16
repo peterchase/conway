@@ -10,10 +10,10 @@ public class Simulation
     public bool Finished { get; private set; } = false;
     public int Generation { get { return mGame.Generation; } }
     private readonly Game mGame;
+    public IReadableBoard InitialBoard {get;}
 
     public Simulation(int width, int height, double density, IEvolution evolution, int? seed = null)
     {
-        IReadableBoard initialBoard;
         if (!seed.HasValue)
         {
             Seed = mRandom.Next();
@@ -22,8 +22,8 @@ public class Simulation
         {
             Seed = seed.Value;
         }
-        initialBoard = new Board(width, height).Randomise(new Random(Seed), density);
-        mGame = new Game(initialBoard, evolution);
+        InitialBoard = new Board(width, height).Randomise(new Random(Seed), density);
+        mGame = new Game(InitialBoard.MutableCopy(), evolution);
     }
     public bool Turn()
     {
