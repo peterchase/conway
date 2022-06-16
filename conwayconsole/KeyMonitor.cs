@@ -1,56 +1,54 @@
 using System;
 using System.Threading;
 
-namespace ConwayConsole
+namespace ConwayConsole;
+
+internal static class KeyMonitor
 {
+  public static event EventHandler<MovementEventArgs> Movement;
 
-    internal static class KeyMonitor
+  public static event EventHandler<EventArgs> Save;
+
+  public static event EventHandler<EventArgs> Database;
+
+  public static void Start()
+  {
+    new Thread(Monitor) { IsBackground = true }.Start();
+  }
+
+  private static void Monitor()
+  {
+    for (; ; )
     {
-        public static event EventHandler<MovementEventArgs> Movement;
+      ConsoleKey key = Console.ReadKey(true).Key;
+      switch (key)
+      {
+        case ConsoleKey.LeftArrow:
+          Movement?.Invoke(null, new MovementEventArgs(0, -1));
+          break;
 
-        public static event EventHandler<EventArgs> Save;
-
-        public static event EventHandler<EventArgs> Database;
-
-        public static void Start()
-        {
-            new Thread(Monitor) { IsBackground = true }.Start();
-        }
-
-        private static void Monitor()
-        {
-            for (; ; )
-            {
-                ConsoleKey key = Console.ReadKey(true).Key;
-                switch (key)
-                {
-                    case ConsoleKey.LeftArrow:
-                        Movement?.Invoke(null, new MovementEventArgs(0, -1));
-                        break;
-
-                    case ConsoleKey.RightArrow:
-                        Movement?.Invoke(null, new MovementEventArgs(0, 1));
-                        break;
+        case ConsoleKey.RightArrow:
+          Movement?.Invoke(null, new MovementEventArgs(0, 1));
+          break;
                         
-                    case ConsoleKey.UpArrow:
-                        Movement?.Invoke(null, new MovementEventArgs(-1, 0));
-                        break;
+        case ConsoleKey.UpArrow:
+          Movement?.Invoke(null, new MovementEventArgs(-1, 0));
+          break;
                         
-                    case ConsoleKey.DownArrow:
-                        Movement?.Invoke(null, new MovementEventArgs(1, 0));
-                        break;
+        case ConsoleKey.DownArrow:
+          Movement?.Invoke(null, new MovementEventArgs(1, 0));
+          break;
                     
-                    case ConsoleKey.S:
-                        Save?.Invoke(null, new EventArgs());
-                        break;
+        case ConsoleKey.S:
+          Save?.Invoke(null, new EventArgs());
+          break;
                         
-                    case ConsoleKey.D:
-                        Database?.Invoke(null, new EventArgs());
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        case ConsoleKey.D:
+          Database?.Invoke(null, new EventArgs());
+          break;
+        default:
+          break;
+      }
     }
+  }
 }

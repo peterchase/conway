@@ -1,16 +1,15 @@
-namespace ConwayLib
+namespace ConwayLib;
+
+/// <summary>
+/// Represents the instantaneous state of a game of Conway's Game of Life on a rectangular grid.
+/// </summary>
+public interface IReadableBoard
 {
-  /// <summary>
-  /// Represents the instantaneous state of a game of Conway's Game of Life on a rectangular grid.
-  /// </summary>
-  public interface IReadableBoard
-  {
-    int Width { get; }
+  int Width { get; }
 
-    int Height { get; }
+  int Height { get; }
 
-    bool Cell(int x, int y);
-    int? CellAge(int x, int y);
-    byte[] GetUniqueHash();
-  }
+  bool Cell(int x, int y);
+  int? CellAge(int x, int y);
+  byte[] GetUniqueHash();
 }
