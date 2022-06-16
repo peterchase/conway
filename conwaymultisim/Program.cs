@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Threading;
+using System.IO;
 
 namespace ConwayMultiSim;
 
@@ -69,6 +70,10 @@ public class Program
                 {
                     await Console.Out.WriteLineAsync($"{sim.Seed,-8}  {sim.Generation,8}");
                 }
+                if (await YesNo($"Save initial state of simulation with seed {longest5.First().Seed} to file [Y/N]: "))
+                {
+                    await SaveToFile(longest5.First().InitialBoard);
+                }
             }
         }
         finally
@@ -77,6 +82,52 @@ public class Program
         }
     }
 
+    private static async Task<bool> YesNo(string prompt)
+    {
+        await Console.Out.WriteAsync(prompt);
+        string response = (await Console.In.ReadLineAsync()).ToLower();
+        return response == "y" || response == "yes";
+    }
+
+    
+    private static async Task SaveToFile(IReadableBoard board)
+    {
+        await Console.Out.WriteAsync("Enter file path (leave blank for default): ");
+        string path = await Console.In.ReadLineAsync();
+
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"{Guid.NewGuid():N}.json");
+        }
+        else
+        {
+            path = Path.ChangeExtension(path, ".json");
+            string dir = Path.GetDirectoryName(path);
+            if (dir != null && !Directory.Exists(dir))
+            {
+                if (await YesNo("Do you want to make a new directory [Y/N]: "))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                else
+                {
+                    await Console.Out.WriteAsync("Cancelling.");
+                    return;
+                }
+            }
+        }
+
+        if (File.Exists(path))
+        {
+            if (!await YesNo("An existing file with that name already exists. Do you want to overwrite it [Y/N]: "))
+            {
+                path = Path.Combine(Path.GetDirectoryName(path), $"{Path.GetFileNameWithoutExtension(path)}-{Guid.NewGuid():N}.json");
+            }
+        }
+
+        await GameStateSerializer.SerializeJson(board.GetCurrentState(DensityOption.Sparse), path);
+        await Console.Out.WriteLineAsync($"Board written to: {Path.GetFullPath(path)}");
+    }
     private static void UIUpdate(Object source, EventArgs e)
     {
         Console.Out.Write($"\r{Volatile.Read(ref mSimsCompleted)}/{mSimsExpected} completed.");
