@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace ConwayLib;
 
 /// <summary>
 /// Represents one run of Conway's Game of Life.
 /// </summary>
-public sealed class Game
+public sealed class Game : IDisposable
 {
   private readonly HashSet<byte[]> mHistory;
 
@@ -69,4 +70,10 @@ public sealed class Game
     mHistory.Add(hash);
     return mCurBoard;
   }
+
+    public void Dispose()
+    {
+      mCurBoard.Dispose();
+      mNextBoard.Dispose();
+    }
 }

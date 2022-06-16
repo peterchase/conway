@@ -10,78 +10,83 @@ namespace ConwayLib;
 /// initialiser syntax by virtue of implementing <see cref="IEnumerable{T}"/> and having the
 /// <see cref="Add"/> method.
 /// </summary>
-public sealed class Board : IMutableBoard, IEnumerable<bool>, IAgeArrayBoard
+public sealed class Board : IMutableBoard, IEnumerable<bool>, IAgeArrayBoard, IDisposable
 {
-  private readonly int?[][] mCells;
+    private readonly BoolArrayHasher mHasher = new();
+    private readonly int?[][] mCells;
 
-  public Board(int width, int height)
-  {
-    mCells = Enumerable.Range(0, height)
-      .Select(_ => new int?[width])
-      .ToArray();
-    Width = width;
-  }
-
-  public Board(GameState state) : this(state.Width, state.Height)
-  {
-    switch (state.Format)
+    public Board(int width, int height)
     {
-      case (DensityOption.Sparse):
-        Array.ForEach(state.SparseData, (p) => SetCell(p.X, p.Y, true));
-        break;
-      case (DensityOption.Dense):
-        for (int x = 0; x < Width; x++)
+        mCells = Enumerable.Range(0, height)
+          .Select(_ => new int?[width])
+          .ToArray();
+        Width = width;
+    }
+
+    public Board(GameState state) : this(state.Width, state.Height)
+    {
+        switch (state.Format)
         {
-          for (int y = 0; y < Height; y++)
-          {
-            SetCell(x, y, state.DenseData[y][x]);
-          }
+            case (DensityOption.Sparse):
+                Array.ForEach(state.SparseData, (p) => SetCell(p.X, p.Y, true));
+                break;
+            case (DensityOption.Dense):
+                for (int x = 0; x < Width; x++)
+                {
+                    for (int y = 0; y < Height; y++)
+                    {
+                        SetCell(x, y, state.DenseData[y][x]);
+                    }
+                }
+                break;
         }
-        break;
     }
-  }
 
-  public byte[] GetUniqueHash()
-  {
-    using var hasher = new BoolArrayHasher();
-    return hasher.GetUniqueHash(mCells.SelectMany(row => row).Select(i => i.HasValue));
-  }
-  public int Width {get; }
-
-  public int Height => mCells.Length;
-
-  public bool Cell(int x, int y) => mCells[y][x].HasValue;
-
-  public int? CellAge(int x, int y) => mCells[y][x];
-
-  public void SetCell(int x, int y, bool value)
-  {
-    if (value)
+    public byte[] GetUniqueHash()
     {
-      if (Cell(x, y))
-      {
-        mCells[y][x] += 1;
-      }
-      else
-      {
-        mCells[y][x] = 0;
-      }
+        return mHasher.GetUniqueHash(mCells.SelectMany(row => row).Select(i => i.HasValue));
     }
-    else
+    public int Width { get; }
+
+    public int Height => mCells.Length;
+
+    public bool Cell(int x, int y) => mCells[y][x].HasValue;
+
+    public int? CellAge(int x, int y) => mCells[y][x];
+
+    public void SetCell(int x, int y, bool value)
     {
-      mCells[y][x] = null;
+        if (value)
+        {
+            if (Cell(x, y))
+            {
+                mCells[y][x] += 1;
+            }
+            else
+            {
+                mCells[y][x] = 0;
+            }
+        }
+        else
+        {
+            mCells[y][x] = null;
+        }
     }
-  }
 
-  int?[][] IAgeArrayBoard.GetAgeBoard()=> mCells;
+    int?[][] IAgeArrayBoard.GetAgeBoard() => mCells;
 
-  #region CollectionInitialiser
+    public void Dispose()
+    {
+        mHasher.Dispose();
+    }
 
-  public void Add(int x, int y, bool value) => SetCell(x, y, value);
+    #region CollectionInitialiser
 
-  public IEnumerator<bool> GetEnumerator() => mCells.SelectMany(row => row).Select(i => i.HasValue).GetEnumerator();
+    public void Add(int x, int y, bool value) => SetCell(x, y, value);
 
-  IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public IEnumerator<bool> GetEnumerator() => mCells.SelectMany(row => row).Select(i => i.HasValue).GetEnumerator();
 
-  #endregion
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    #endregion
 }

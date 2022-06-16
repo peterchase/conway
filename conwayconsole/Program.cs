@@ -67,7 +67,8 @@ public static class Program
                 KeyMonitor.Database += (_, _) => save = (true, true);
 
                 // create game
-                var game = new Game(initialBoard, StandardEvolution.Instance);
+                using var game = new Game(initialBoard, StandardEvolution.Instance);
+                
                 var builder = new StringBuilder();
 
                 // Setup console

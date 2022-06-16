@@ -3,7 +3,7 @@ using System;
 
 namespace ConwayMultiSim;
 
-public class Simulation
+public class Simulation : IDisposable
 {
     private static readonly Random mRandom = new();
     public int Seed {get; }
@@ -35,5 +35,10 @@ public class Simulation
         }
         else
             return true;
+    }
+
+    public void Dispose()
+    {
+        mGame.Dispose();
     }
 }

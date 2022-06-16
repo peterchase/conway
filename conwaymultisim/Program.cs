@@ -52,6 +52,7 @@ public class Program
                 {
                     SimulationComplete?.Invoke(null, EventArgs.Empty);
                 }
+                sim.Dispose();
             });
             var time = sw.Elapsed;
 
