@@ -14,7 +14,7 @@ public class CellCoord : IEquatable<CellCoord>
 
   public bool Equals(CellCoord other)
   {
-    return X==other.X && Y == other.Y;
+    return other != null && X==other.X && Y == other.Y;
   }
 
   public static bool operator ==(CellCoord a, CellCoord b) => a.Equals(b);
